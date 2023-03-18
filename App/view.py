@@ -61,6 +61,66 @@ def print_menu():
     print("9- Ejecutar Requerimiento 8")
     print("0- Salir")
 
+def menu_nombre_archivo():
+    print("Que porcentage de datos ")
+    print("1-1%")
+    print("2-5%")
+    print("3-10%")
+    print("4-20%")
+    print("5-30%")
+    print("6-50%")
+    print("7-100%")
+
+def menu_archivo():
+    menu_nombre_archivo()
+    porcentaje = input('Seleccione una opción para continuar\n')
+    try:
+        if int(porcentaje) == 2:
+            
+            size ="Salida_agregados_renta_juridicos_AG-5pct.csv"
+            return size
+        elif int(porcentaje) == 3:
+            size = "Salida_agregados_renta_juridicos_AG-10pct.csv"
+            return size
+        elif int(porcentaje) == 4:
+            size = "Salida_agregados_renta_juridicos_AG-20pct.csv"
+            return size
+        elif int(porcentaje) == 5:
+            size = "Salida_agregados_renta_juridicos_AG-30pct.csv"
+            return size
+        elif int(porcentaje) == 6:
+            size = "Salida_agregados_renta_juridicos_AG-50pct.csv"
+            return size
+        elif int(porcentaje) == 1:
+            size = "Salida_agregados_renta_juridicos_AG-small.csv"
+            return size
+        elif int(porcentaje) == 7:
+            size = "Salida_agregados_renta_juridicos_AG-large.csv"
+            return size
+    except ValueError:
+            print(" una opción válida.\n")
+            traceback.print_exc()
+
+def menu_decision_espacio():
+    print("Desea saber cuanto espacio se ocupo? ")
+    print("1- Si desea saberlo")
+    print("2- Si no desea saberlo")
+
+def menu_espacio():
+    menu_decision_espacio()
+    decision_v = input('Seleccione una opción para continuar\n')
+    try:
+        if int(decision_v) == 1:
+            decision = True
+            return decision
+        elif int(decision_v) == 2:
+            decision = False
+            return decision
+    except ValueError:
+            print(" una opción válida.\n")
+            traceback.print_exc()
+            
+
 
 def load_data(control):
     """
