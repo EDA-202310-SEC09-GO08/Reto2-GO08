@@ -66,7 +66,7 @@ def load_data(control, filename,memory):
 
     stop_time =get_time()
 
-    delta = delta_time(stop_time, start_time)
+    delta = delta_time(start_time, stop_time)
 
     # finaliza el proceso para medir memoria
     if memory is True:
