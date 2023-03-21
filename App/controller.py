@@ -45,8 +45,11 @@ def load_data(control, filename):
     """
     Carga los datos del reto
     """
-    # TODO: Realizar la carga de datos
-    pass
+    file = cf.data_dir + filename
+    input_file = csv.DictReader(open(file, encoding='utf-8'))
+    catalog = control['model']
+    for line in input_file:
+        model.add_data(catalog, line)
 
 
 # Funciones de ordenamiento
