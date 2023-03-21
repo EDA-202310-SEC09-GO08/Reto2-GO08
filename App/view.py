@@ -203,12 +203,12 @@ def menu_espacio():
             
 
 
-def load_data(control,filename):
+def load_data(control,filename,memory):
     """
     Carga los datos
     """
 
-    control_1 =controller.load_data(control,filename)
+    control_1 =controller.load_data(control,filename,memory)
     return control_1
 
 
@@ -303,6 +303,7 @@ if __name__ == "__main__":
                 filename = menu_archivo()
                 tipo = menu_maptype()
                 factor =0
+                memory = menu_espacio()
                 if tipo == 'PROBING':
                     factor = menu_factor_PROBING()
 
@@ -310,10 +311,14 @@ if __name__ == "__main__":
                     factor = menu_factor_CHAINING()
 
                 control = new_controller(tipo,factor)
-                load_data(control,filename)
+                tupla = load_data(control,filename,memory)
                 
+                print('Tamaño: ')
                 print(lt.size(control['model']['Lista actividades general']))
-
+                print('Tiempo: ')
+                print(tupla[1])
+                print('memoria: ')
+                print(tupla[2])
             elif int(inputs) == 2:
                 print_req_1(control)
 

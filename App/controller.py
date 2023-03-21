@@ -47,15 +47,36 @@ def new_controller(tipo, factor):
 
 # Funciones para la carga de datos
 
-def load_data(control, filename):
+def load_data(control, filename,memory):
     """
     Carga los datos del reto
     """
+    start_time = get_time()
+
+    delta_m = None
+    if memory is True:
+        tracemalloc.start()
+        start_memory = get_memory()  
+
     file = cf.data_dir + filename
     input_file = csv.DictReader(open(file, encoding='utf-8'))
     catalog = control['model']
     for line in input_file:
         model.add_data(catalog, line)
+
+    stop_time =get_time()
+
+    delta = delta_time(stop_time, start_time)
+
+    # finaliza el proceso para medir memoria
+    if memory is True:
+        stop_memory = get_memory()
+        tracemalloc.stop()
+        # calcula la diferencia de memoria
+        delta_m = delta_memory(stop_memory, start_memory)
+        # respuesta con los datos de tiempo y memoria
+    return control,delta, delta_m
+
 
 
 # Funciones de ordenamiento
