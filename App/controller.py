@@ -31,7 +31,7 @@ El controlador se encarga de mediar entre la vista y el modelo.
 """
 
 
-def new_controller():
+def new_controller(tipo, factor):
     """
     Crea una instancia del modelo
     """
@@ -39,7 +39,7 @@ def new_controller():
     control = {
         "model": None
     }
-    control["model"] = model.new_data_structs()
+    control["model"] = model.new_data_structs(tipo,factor)
     
     return control
     

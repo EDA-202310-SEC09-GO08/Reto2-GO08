@@ -40,11 +40,11 @@ operación solicitada
 """
 
 
-def new_controller():
+def new_controller(tipo,factor):
     """
         Se crea una instancia del controlador
     """
-    control = controller.new_controller()
+    control = controller.new_controller(tipo,factor)
 
     return control
 
@@ -102,6 +102,86 @@ def menu_archivo():
             print(" una opción válida.\n")
             traceback.print_exc()
 
+def menu_maptype_opciones():
+    print("Qué tipo de mapa desea cargar? ")
+    print("1-Linear Probing")
+    print("2-Separate Chaining")
+
+
+def menu_maptype():
+    menu_maptype_opciones()
+    tipo = input('Seleccione una opción para continuar\n')
+    try:
+        if int(tipo) == 1:
+            
+            size ="PROBING"
+            return size
+        elif int(tipo) == 2:
+            size = "CHAINING"
+            return size
+        
+    except ValueError:
+            print(" una opción válida.\n")
+            traceback.print_exc()
+
+def menu_opciones_factor_PROBING():
+    print("Que factor de carga PROBING quiere? ")
+    print("1-0,1")
+    print("2-0,5")
+    print("3-0,7")
+    print("4-0,9")
+
+def menu_factor_PROBING():
+    menu_opciones_factor_PROBING()
+    porcentaje = input('Seleccione una opción para continuar\n')
+    try:
+        if int(porcentaje) == 1:
+            
+            size =0.1
+            return size
+        elif int(porcentaje) == 2:
+            size = 0.5
+            return size
+        elif int(porcentaje) == 3:
+            size = 0.7
+            return size
+        elif int(porcentaje) == 4:
+            size = 0.9
+            return size
+    except ValueError:
+            print(" una opción válida.\n")
+            traceback.print_exc()
+
+
+def menu_opciones_factor_CHAINING():
+    print("Que factor de carga CHAINING quiere? ")
+    print("1-2.0")
+    print("2-4.0")
+    print("3-6.0")
+    print("4-8.0")
+
+def menu_factor_CHAINING():
+    menu_opciones_factor_CHAINING()
+    porcentaje = input('Seleccione una opción para continuar\n')
+    try:
+        if int(porcentaje) == 1:
+            
+            size =2
+            return size
+        elif int(porcentaje) == 2:
+            size = 4
+            return size
+        elif int(porcentaje) == 3:
+            size = 6
+            return size
+        elif int(porcentaje) == 4:
+            size = 8
+            return size
+    except ValueError:
+            print(" una opción válida.\n")
+            traceback.print_exc()   
+
+
 def menu_decision_espacio():
     print("Desea saber cuanto espacio se ocupo? ")
     print("1- Si desea saberlo")
@@ -123,12 +203,12 @@ def menu_espacio():
             
 
 
-def load_data(control):
+def load_data(control,filename):
     """
     Carga los datos
     """
 
-    control_1 =controller.load_data(control, "Salida_agregados_renta_juridicos_AG-small.csv")
+    control_1 =controller.load_data(control,filename)
     return control_1
 
 
@@ -204,7 +284,7 @@ def print_req_8(control):
 
 
 # Se crea el controlador asociado a la vista
-control = new_controller()
+
 
 # main del reto
 if __name__ == "__main__":
@@ -218,9 +298,19 @@ if __name__ == "__main__":
         inputs = input('Seleccione una opción para continuar\n')
         try:
             if int(inputs) == 1:
-                control = new_controller()
+                
                 print("Cargando información de los archivos ....\n")
-                load_data(control)
+                filename = menu_archivo()
+                tipo = menu_maptype()
+                factor =0
+                if tipo == 'PROBING':
+                    factor = menu_factor_PROBING()
+
+                elif tipo == 'CHAINING':
+                    factor = menu_factor_CHAINING()
+
+                control = new_controller(tipo,factor)
+                load_data(control,filename)
                 
                 print(lt.size(control['model']['Lista actividades general']))
 

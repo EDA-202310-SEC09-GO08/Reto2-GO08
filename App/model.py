@@ -46,7 +46,7 @@ dos listas, una para los videos, otra para las categorias de los mismos.
 # Construccion de modelos
 
 
-def new_data_structs():
+def new_data_structs(tipo,factor):
     """
     Inicializa las estructuras de datos del modelo. Las crea de
     manera vacía para posteriormente almacenar la información.
@@ -56,8 +56,7 @@ def new_data_structs():
     
     data_structs['Lista actividades general']=lt.newList('ARRAY_LIST')
 
-    data_structs['Años']=mp.newMap(40,maptype='PROBING',
-                                   loadfactor=0.5)
+    data_structs['Años']=mp.newMap(40, maptype=tipo , loadfactor=factor)
     return(data_structs)
 
 
