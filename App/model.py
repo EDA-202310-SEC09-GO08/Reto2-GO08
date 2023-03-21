@@ -72,6 +72,8 @@ def add_data(data_structs, data):
     add_impuesto_anio(data_structs,data)
 
     
+
+    
 def add_impuesto_anio(data_structs, impuesto):
     years = data_structs['Años']
     anio = impuesto['Año']
@@ -94,7 +96,7 @@ def newYear(year):
     """
     entry = {'Año': "", "Lista": None}
     entry['Año'] = year
-    entry['Lista'] = lt.newList('SINGLE_LINKED', compareYears)
+    entry['Lista'] = lt.newList('ARRAY_LIST', compareYears)
     return entry   
 
 

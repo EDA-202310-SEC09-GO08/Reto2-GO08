@@ -45,6 +45,7 @@ def new_controller():
         Se crea una instancia del controlador
     """
     control = controller.new_controller()
+
     return control
 
 
@@ -217,9 +218,11 @@ if __name__ == "__main__":
         inputs = input('Seleccione una opción para continuar\n')
         try:
             if int(inputs) == 1:
+                control = new_controller()
                 print("Cargando información de los archivos ....\n")
-                control_1 = load_data(control)
-                print(control_1)
+                load_data(control)
+                
+                print(lt.size(control['model']['Lista actividades general']))
 
             elif int(inputs) == 2:
                 print_req_1(control)
