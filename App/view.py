@@ -232,9 +232,12 @@ def print_req_2(control):
         Función que imprime la solución del Requerimiento 2 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 2
+    anio = input("En que año desea buscar la informacion ")
+    sector = input("En que sector desea buscarlo ")
 
-    respuesta = controller.req_2(control)
-    print (respuesta)
+    respuesta = controller.req_2(control, anio, sector)
+
+    print(tabulate([respuesta], headers="keys", tablefmt= "grid", maxcolwidths=15, maxheadercolwidths=15  ))
 
 
 def print_req_3(control):

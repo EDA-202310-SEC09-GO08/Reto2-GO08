@@ -103,48 +103,49 @@ def organizar_sector(data_structs):
     #los años de los datos, en una lista
     date = mp.newMap()
     # el diccionario que tendra los datos(respuesta)
-    sector = mp.newMap()
-    # el diccionario con datos y sector (dividido por el año y el sector)
-    i = 0 
-    while i < lt.size(llaves):
+    
+    
+    i = 1 
+    while i <= lt.size(llaves):
         fecha = lt.getElement(llaves,i)
         #cada llave en los datos, va de uno en uno por la lista
-        mp.put(date,fecha,sector)
-        #crear la plantilla de la respuesta final
+        sector = mp.newMap()
+        #se crea para organizar sectores
+        
+        
         especifico = mp.get(data_structs["model"]["Años"], fecha)
         #da un dic de llave valor acorde al año dado
         valores = especifico["value"]["Lista"]
         #devuelve el valor de cada año 
 
-        a = 0 
-        dic_keys = mp.get(date,fecha)
-        dic = me.getValue(dic_keys)
-        # segun cada año devuelve el dic de los sectores 
-        while a < lt.size(valores):
+        a = 1 
+        
+        
+        while a <= lt.size(valores):
             lista = lt.getElement(valores,a)
             #cada dato dentro del año especifico 
             numero_sec = lista["Código sector económico"]
             # cada numero del sector 
             
             
-            esta = mp.contains(dic,numero_sec)
+            esta = mp.contains(sector,numero_sec)
             #verificar si esta 
             if esta == False:
                 #crea una nueva lista y le agrega el valor dado 
                 list_sec = lt.newList()
                 lt.addLast(list_sec, lista)
-                mp.put(dic,numero_sec,list_sec)
+                mp.put(sector,numero_sec,list_sec)
             else:
                 #solo agrega el valor dado 
-                agregar_keys = mp.get(dic,numero_sec)
-                agregar = me.getValue(agregar_keys)
+                
+                agregar = devolver_value(sector,numero_sec)
                 lt.addLast(agregar,lista)
             a+=1
         i +=1
+        mp.put(date,fecha,sector)
     return date
 
 
-# Funciones para creacion de datos
 
 def new_data(anio, cod_acti, nom_acti, cod_sector, nom_sector, cod_subsec, nom_subsec, costos_gastos_nom, apor_seguridad, apor_entidades, efec_equivalentes,inv_instru, 
              cuentas_cob, inventario, propiedades, otros_act, total_patrim_bruto, pasivos, total_patrim_liquido, ingresos_ordin, ingresos_finan, ingresos_otr, total_ingresos_brut,
@@ -228,6 +229,10 @@ def new_data(anio, cod_acti, nom_acti, cod_sector, nom_sector, cod_subsec, nom_s
 
 
 # Funciones de consulta
+def devolver_value(dic, key):
+    llave_valor = mp.get(dic, key)
+    valor = me.getValue(llave_valor)
+    return valor 
 
 def get_data(data_structs, id):
     """
@@ -253,23 +258,26 @@ def req_1(data_structs):
     pass
 
 
-def req_2(data_structs):
+def req_2(data_structs, anio, codigo):
     """
     Función que soluciona el requerimiento 2
     """
     # TODO: Realizar el requerimiento 2
     dic = organizar_sector(data_structs)
- 
-    a = 0
-    return 
+    #dic con sector y anios organizados
+    anio_buscado = devolver_value(dic, int(anio))
+    #dic del anio
+    sector_buscado = devolver_value(anio_buscado, codigo)
+    #devuelve acorde al anio y el sector, en este caso una lista 
+    final = encontrar_mayor_criterio(sector_buscado, "Total saldo a favor")
+    #el mayor
+    res = filtrar_dic_con_por_llaves(final,["Código actividad económica", "Nombre actividad económica", "Código sector económico","Nombre sector económico",
+                 "Código subsector económico", 'Nombre subsector económico', "Total ingresos netos", "Total costos y gastos",
+                 "Total saldo a pagar", "Total saldo a favor"])
+    # organiza a lo que quiero que muestre 
+
+    return res
                 
-
-                
-
-
-
-        
-
 
 
 def req_3(data_structs):
@@ -362,3 +370,40 @@ def compareYears(year1, year2):
     else:
         return -1
 
+def encontrar_mayor_criterio(lista,criterio):
+    i = 1 
+    tamanio = lt.size(lista)
+    mayor = 0 
+    respuesta = {}
+    
+    while i<=tamanio:
+        exacto = lt.getElement(lista,i)
+        if float(exacto[criterio])>float(mayor):
+            mayor = exacto[criterio]
+            respuesta = exacto
+        i+=1
+
+    
+    return respuesta
+                
+
+def filtrar_lista_dics_por(lista_dics,lista_columnas):
+    
+    lista_filt = []
+
+    tamanio_lista = lt.size(lista_dics)
+    i = 0
+
+    while i<tamanio_lista:
+        a = lt.getElement(lista_dics,i)
+        dic_filt_dado = filtrar_dic_con_por_llaves(a,lista_columnas)
+        lista_filt.append(dic_filt_dado)
+        i+=1
+    return lista_filt
+
+def filtrar_dic_con_por_llaves(dic, lista_de_columnas_aMostrar):
+    dic_filt ={}
+    for llave in lista_de_columnas_aMostrar:
+        dic_filt[llave]=dic[llave]
+
+    return dic_filt
