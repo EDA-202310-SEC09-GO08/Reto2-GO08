@@ -96,7 +96,52 @@ def newYear(year):
     entry = {'Año': "", "Lista": None}
     entry['Año'] = year
     entry['Lista'] = lt.newList('ARRAY_LIST', compareYears)
-    return entry   
+    return entry
+
+def organizar_sector(data_structs):
+    llaves = mp.keySet(data_structs["model"]["Años"])
+    #los años de los datos, en una lista
+    date = mp.newMap()
+    # el diccionario que tendra los datos(respuesta)
+    sector = mp.newMap()
+    # el diccionario con datos y sector (dividido por el año y el sector)
+    i = 0 
+    while i < lt.size(llaves):
+        fecha = lt.getElement(llaves,i)
+        #cada llave en los datos, va de uno en uno por la lista
+        mp.put(date,fecha,sector)
+        #crear la plantilla de la respuesta final
+        especifico = mp.get(data_structs["model"]["Años"], fecha)
+        #da un dic de llave valor acorde al año dado
+        valores = especifico["value"]["Lista"]
+        #devuelve el valor de cada año 
+
+        a = 0 
+        dic_keys = mp.get(date,fecha)
+        dic = me.getValue(dic_keys)
+        # segun cada año devuelve el dic de los sectores 
+        while a < lt.size(valores):
+            lista = lt.getElement(valores,a)
+            #cada dato dentro del año especifico 
+            numero_sec = lista["Código sector económico"]
+            # cada numero del sector 
+            
+            
+            esta = mp.contains(dic,numero_sec)
+            #verificar si esta 
+            if esta == False:
+                #crea una nueva lista y le agrega el valor dado 
+                list_sec = lt.newList()
+                lt.addLast(list_sec, lista)
+                mp.put(dic,numero_sec,list_sec)
+            else:
+                #solo agrega el valor dado 
+                agregar_keys = mp.get(dic,numero_sec)
+                agregar = me.getValue(agregar_keys)
+                lt.addLast(agregar,lista)
+            a+=1
+        i +=1
+    return date
 
 
 # Funciones para creacion de datos
@@ -213,7 +258,18 @@ def req_2(data_structs):
     Función que soluciona el requerimiento 2
     """
     # TODO: Realizar el requerimiento 2
-    pass
+    dic = organizar_sector(data_structs)
+ 
+    a = 0
+    return 
+                
+
+                
+
+
+
+        
+
 
 
 def req_3(data_structs):
