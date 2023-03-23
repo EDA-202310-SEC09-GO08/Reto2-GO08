@@ -261,7 +261,30 @@ def print_req_5(control):
         Función que imprime la solución del Requerimiento 5 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 5
-    pass
+    anios = input("En que año desea encontrar el mayor descuento tributario ")
+    respuesta = controller.req_5(control, anios)
+    print(tabulate([respuesta[0]], headers="keys", tablefmt= "grid", maxcolwidths=15, maxheadercolwidths=15  ))
+    tamanio = len(respuesta[1])
+
+    if tamanio >=6:
+        i = 0 
+        menores =[]
+        while i < 3:
+            menores.append(respuesta[1][i])
+            i +=1
+        print("The three economic activities that contributed the least in " + anios )
+        print(tabulate(menores, headers="keys", tablefmt= "grid", maxcolwidths=15, maxheadercolwidths=15  ))
+        largo = tamanio - i 
+        mayores =[]
+        while largo < tamanio:
+            mayores.append(respuesta[1][largo])
+            largo +=1
+        print("The three economic activities that contributed the most in " + anios )
+        print(tabulate(mayores, headers="keys", tablefmt= "grid", maxcolwidths=15, maxheadercolwidths=15  ))
+    else:
+        print("There are only " + str(tamanio)+" economic activities in " + anios)
+        print(tabulate(respuesta[1], headers="keys", tablefmt= "grid", maxcolwidths=15, maxheadercolwidths=15  ))
+    
 
 
 def print_req_6(control):

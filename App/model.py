@@ -98,7 +98,7 @@ def newYear(year):
     entry['Lista'] = lt.newList('ARRAY_LIST', compareYears)
     return entry
 
-def organizar_sector(data_structs):
+def organizar_sector(data_structs,subdivision):
     llaves = mp.keySet(data_structs["model"]["Años"])
     #los años de los datos, en una lista
     date = mp.newMap()
@@ -124,7 +124,7 @@ def organizar_sector(data_structs):
         while a <= lt.size(valores):
             lista = lt.getElement(valores,a)
             #cada dato dentro del año especifico 
-            numero_sec = lista["Código sector económico"]
+            numero_sec = lista[subdivision]
             # cada numero del sector 
             
             
@@ -263,7 +263,7 @@ def req_2(data_structs, anio, codigo):
     Función que soluciona el requerimiento 2
     """
     # TODO: Realizar el requerimiento 2
-    dic = organizar_sector(data_structs)
+    dic = organizar_sector(data_structs, "Código sector económico")
     #dic con sector y anios organizados
     anio_buscado = devolver_value(dic, int(anio))
     #dic del anio
@@ -296,12 +296,79 @@ def req_4(data_structs):
     pass
 
 
-def req_5(data_structs):
+def req_5(data_structs, anio):
     """
     Función que soluciona el requerimiento 5
     """
     # TODO: Realizar el requerimiento 5
-    pass
+    dic = organizar_sector(data_structs, "Código subsector económico" )
+    #dic subdividido
+    
+    
+    dic_del_anio = devolver_value(dic,int(anio))
+    #dic del subsector en el año
+    llaves = mp.keySet(dic_del_anio)
+
+    i = 1
+    sumas = lt.newList(cmpfunction="ARRAY_LIST")
+    #estara la suma del descuento
+    sectores = lt.newList()
+    #estara cual sector (mismo orden al de arriba)
+
+    while i<=lt.size(llaves):
+        numero = 0
+        pos = lt.getElement(llaves, i )
+        # pos es igual a el numero del subsector 
+
+        lt.addLast(sectores, i)
+        #posicion en la lista de llaves 
+
+        valor = devolver_value(dic_del_anio,pos)
+        #lista de dicionarios 
+        numero = suma_variable(valor,"Descuentos tributarios" )
+        #suma descuentos totales por subsector 
+
+        lt.addLast(sumas, numero)
+        i+=1
+    
+    posicion = encontrar_mayor_list(sumas)
+    #en que posicion de las llaves(subsector) esta el de mayores descuentos 
+
+    sector_mayor = lt.getElement(llaves,posicion[1])
+    #nombre del subsector 
+
+    para_organizar = devolver_value(dic_del_anio, sector_mayor)
+    #lista de los subsectores 
+    merg.sort(para_organizar,sort_criteria_descuentos_tributarios)
+    #lista subsectores organizados de menor a mayor por descuento 
+
+    sacar_basicos = lt.getElement(para_organizar,1)
+    #encontrar las cosas ue comparten todos
+
+    
+    
+    respuesta = {"Código sector económico": sacar_basicos["Código sector económico"],
+                 "Nombre sector económico":sacar_basicos["Nombre sector económico"] ,
+                  "Código subsector económico": sacar_basicos["Código subsector económico"],
+                   "Código subsector económico":sacar_basicos["Código subsector económico"] }
+    
+    #diccionario con todo lo necesario
+    codigos= [ "Total ingresos netos", "Total costos y gastos", "Total saldo a pagar", "Total saldo a favor" ]
+
+    for cod in codigos:
+        #sumar cada variable 
+        la_suma=suma_variable(para_organizar,cod)
+        respuesta[cod] = la_suma
+    
+    heads = ["Código actividad económica", "Nombre actividad económica", "Código sector económico","Nombre sector económico",
+                 "Código subsector económico", 'Nombre subsector económico', "Total ingresos netos", "Total costos y gastos",
+                 "Total saldo a pagar", "Total saldo a favor"]
+    
+    final = filtrar_lista_dics_por(para_organizar, heads)
+    #asignarle diccionario a cada uno por lo que quiero que muestre 
+    
+
+    return respuesta, final 
 
 
 def req_6(data_structs):
@@ -369,6 +436,29 @@ def compareYears(year1, year2):
         return 1
     else:
         return -1
+    
+
+def sort_criteria_descuentos_tributarios(a,b):
+
+        cod_1 = a["Descuentos tributarios"].split()[0].split('/')[0]
+        cod_2 = b["Descuentos tributarios"].split()[0].split('/')[0]
+        return(float(cod_1)<float(cod_2))
+
+def encontrar_mayor_list (list):
+    i = 1 
+    tamanio = lt.size(list)
+    mayor = 0 
+    
+    
+    while i<=tamanio:
+        exacto = lt.getElement(list,i)
+        if float(exacto)>float(mayor):
+            mayor = exacto
+            
+            pos = i
+        i+=1
+
+    return mayor, pos
 
 def encontrar_mayor_criterio(lista,criterio):
     i = 1 
@@ -385,6 +475,20 @@ def encontrar_mayor_criterio(lista,criterio):
 
     
     return respuesta
+
+def suma_variable(lista, suma):
+    tamanio = lt.size(lista)
+    i = 1
+    valor = 0
+
+    while i <= tamanio:
+        pos = lt.getElement(lista, i)
+        valor += int(pos[suma])
+        i+=1
+    
+    
+    
+    return valor
                 
 
 def filtrar_lista_dics_por(lista_dics,lista_columnas):
@@ -392,9 +496,9 @@ def filtrar_lista_dics_por(lista_dics,lista_columnas):
     lista_filt = []
 
     tamanio_lista = lt.size(lista_dics)
-    i = 0
+    i = 1
 
-    while i<tamanio_lista:
+    while i<=tamanio_lista:
         a = lt.getElement(lista_dics,i)
         dic_filt_dado = filtrar_dic_con_por_llaves(a,lista_columnas)
         lista_filt.append(dic_filt_dado)
