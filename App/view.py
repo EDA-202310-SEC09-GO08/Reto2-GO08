@@ -53,12 +53,12 @@ def print_menu():
     print("Bienvenido")
     print("1- Cargar información")
     print("2- Ejecutar Requerimiento 1")
-    print("3- Ejecutar Requerimiento 2")
+    print("3- Obtener la actividad econónomica con mayor saldo a favor de un sector economico y año especifico ")
     print("4- Ejecutar Requerimiento 3")
     print("5- Ejecutar Requerimiento 4")
-    print("6- Ejecutar Requerimiento 5")
+    print("6- Encontrar el subsector económico con los mayores descuentos tributarios en un año especifico ")
     print("7- Ejecutar Requerimiento 6")
-    print("8- Ejecutar Requerimiento 7")
+    print("8- Listar el TOP (N) de las actividades económicas con el menor total de costos y gastos para un subsector economico en unos años especificos ")
     print("9- Ejecutar Requerimiento 8")
     print("0- Salir")
 
@@ -263,6 +263,7 @@ def print_req_5(control):
     # TODO: Imprimir el resultado del requerimiento 5
     anios = input("En que año desea encontrar el mayor descuento tributario ")
     respuesta = controller.req_5(control, anios)
+    print( "The subsector with the highest total witholdings (Descuentos Tributarios) in " + anios)
     print(tabulate([respuesta[0]], headers="keys", tablefmt= "grid", maxcolwidths=15, maxheadercolwidths=15  ))
     tamanio = len(respuesta[1])
 
@@ -272,17 +273,17 @@ def print_req_5(control):
         while i < 3:
             menores.append(respuesta[1][i])
             i +=1
-        print("The three economic activities that contributed the least in " + anios )
+        print("The three economic activities that contributed the least in " + anios + " in the subsector " + str(respuesta[2]) )
         print(tabulate(menores, headers="keys", tablefmt= "grid", maxcolwidths=15, maxheadercolwidths=15  ))
         largo = tamanio - i 
         mayores =[]
         while largo < tamanio:
             mayores.append(respuesta[1][largo])
             largo +=1
-        print("The three economic activities that contributed the most in " + anios )
+        print("The three economic activities that contributed the most in " + anios + " in the subsector " + str(respuesta[2]) )
         print(tabulate(mayores, headers="keys", tablefmt= "grid", maxcolwidths=15, maxheadercolwidths=15  ))
     else:
-        print("There are only " + str(tamanio)+" economic activities in " + anios)
+        print("There are only " + str(tamanio)+" economic activities in " + anios +  " in the subsector " + str(respuesta[2]) )
         print(tabulate(respuesta[1], headers="keys", tablefmt= "grid", maxcolwidths=15, maxheadercolwidths=15  ))
     
 
@@ -300,7 +301,17 @@ def print_req_7(control):
         Función que imprime la solución del Requerimiento 7 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 7
-    pass
+    anios = input("Ingrese el año que se desea saber informacion ")
+    codigo = input("Ingrese el código subsector económico que desea saber sus actividades ")
+    numero_acti = input("Ingrese cuantas actividades desea investigar ")
+    respuesta = controller.req_7(control, anios,codigo, numero_acti)
+    tamanio = len(respuesta)
+    if tamanio < int(numero_acti):
+        print ("There are only " + str(tamanio)+ " economic activities in subsector " + str(codigo) + " and in the year " + str(anios) )
+        print(tabulate(respuesta, headers="keys", tablefmt= "grid", maxcolwidths=15, maxheadercolwidths=15  ))
+    else:
+        print("These are the " + str(numero_acti) + " lowest cost and expenses in the subsector " + str(codigo) + " in the year " + str(anios))
+        print(tabulate(respuesta, headers="keys", tablefmt= "grid", maxcolwidths=15, maxheadercolwidths=15  ))
 
 
 def print_req_8(control):

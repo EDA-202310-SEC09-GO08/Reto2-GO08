@@ -350,7 +350,9 @@ def req_5(data_structs, anio):
     respuesta = {"Código sector económico": sacar_basicos["Código sector económico"],
                  "Nombre sector económico":sacar_basicos["Nombre sector económico"] ,
                   "Código subsector económico": sacar_basicos["Código subsector económico"],
-                   "Código subsector económico":sacar_basicos["Código subsector económico"] }
+                   "Código subsector económico":sacar_basicos["Código subsector económico"],
+                   "Descuentos tributarios": posicion[0]
+                   }
     
     #diccionario con todo lo necesario
     codigos= [ "Total ingresos netos", "Total costos y gastos", "Total saldo a pagar", "Total saldo a favor" ]
@@ -361,14 +363,14 @@ def req_5(data_structs, anio):
         respuesta[cod] = la_suma
     
     heads = ["Código actividad económica", "Nombre actividad económica", "Código sector económico","Nombre sector económico",
-                 "Código subsector económico", 'Nombre subsector económico', "Total ingresos netos", "Total costos y gastos",
+                 "Código subsector económico", 'Nombre subsector económico',"Descuentos tributarios", "Total ingresos netos", "Total costos y gastos",
                  "Total saldo a pagar", "Total saldo a favor"]
     
     final = filtrar_lista_dics_por(para_organizar, heads)
     #asignarle diccionario a cada uno por lo que quiero que muestre 
     
 
-    return respuesta, final 
+    return respuesta, final, sector_mayor
 
 
 def req_6(data_structs):
@@ -379,12 +381,47 @@ def req_6(data_structs):
     pass
 
 
-def req_7(data_structs):
+def req_7(data_structs, anio, codigo, num_actividades):
     """
     Función que soluciona el requerimiento 7
     """
     # TODO: Realizar el requerimiento 7
-    pass
+    dic = organizar_sector(data_structs, "Código subsector económico" )
+    #dic subdividido
+    
+    
+    dic_del_anio = devolver_value(dic,int(anio))
+    #dic segun el año pedido
+    esta = mp.contains(dic_del_anio,codigo)
+    if esta:
+        lista_sub_sector = devolver_value(dic_del_anio, str(codigo))
+     #lista segun el codigo pedido
+
+        merg.sort(lista_sub_sector, sort_criteria_total_costos_gastos)
+     #organizado 
+
+        tamanio = lt.size(lista_sub_sector)
+        respuesta = lt.newList(cmpfunction="ARRAY_LIST")
+
+        if int(num_actividades) < tamanio:
+            i =1
+            while i <= int(num_actividades):
+                valor = lt.getElement(lista_sub_sector,i)
+                lt.addLast(respuesta,valor)
+                i+=1
+        else:
+            respuesta = lista_sub_sector
+    
+        heads = ["Código actividad económica", "Nombre actividad económica", "Código sector económico","Nombre sector económico",
+                    "Código subsector económico", 'Nombre subsector económico', "Total ingresos netos", "Total costos y gastos",
+                    "Total saldo a pagar", "Total saldo a favor"]
+        final = filtrar_lista_dics_por(respuesta,heads)
+    else:
+        final = "No hay ese subsector en el año indicado "
+    return final 
+        
+
+
 
 
 def req_8(data_structs):
@@ -442,6 +479,12 @@ def sort_criteria_descuentos_tributarios(a,b):
 
         cod_1 = a["Descuentos tributarios"].split()[0].split('/')[0]
         cod_2 = b["Descuentos tributarios"].split()[0].split('/')[0]
+        return(float(cod_1)<float(cod_2))
+
+def sort_criteria_total_costos_gastos(a,b):
+
+        cod_1 = a["Total costos y gastos"].split()[0].split('/')[0]
+        cod_2 = b["Total costos y gastos"].split()[0].split('/')[0]
         return(float(cod_1)<float(cod_2))
 
 def encontrar_mayor_list (list):
