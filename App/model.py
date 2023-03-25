@@ -399,6 +399,13 @@ def encontrar_menor(lista, criterio):
             menor = exacto[criterio]
         i+=1
     return respuesta
+
+def sort_criteria_retenciones(a,b):
+
+        cod_1 = a['Total retenciones'].split()[0].split('/')[0]
+        cod_2 = b['Total retenciones'].split()[0].split('/')[0]
+        return(float(cod_1)<float(cod_2))
+
 def req_3(data_structs):
     """
     Función que soluciona el requerimiento 3
