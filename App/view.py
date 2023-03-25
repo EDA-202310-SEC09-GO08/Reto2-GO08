@@ -319,6 +319,9 @@ if __name__ == "__main__":
                 print(tupla[1])
                 print('memoria: ')
                 print(tupla[2])
+                dat =mp.get(control['model']['Años'],2015)
+                llaves = mp.keySet(control['model']['Años'])
+                print(llaves)
             elif int(inputs) == 2:
                 print_req_1(control)
 
