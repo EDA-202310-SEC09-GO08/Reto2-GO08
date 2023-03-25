@@ -31,7 +31,11 @@ from DISClib.DataStructures import mapentry as me
 assert cf
 from tabulate import tabulate
 import traceback
-
+from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import insertionsort as ins
+from DISClib.Algorithms.Sorting import selectionsort as se
+from DISClib.Algorithms.Sorting import mergesort as merg
+from DISClib.Algorithms.Sorting import quicksort as quk
 """
 La vista se encarga de la interacción con el usuario
 Presenta el menu de opciones y por cada seleccion
@@ -360,7 +364,10 @@ if __name__ == "__main__":
                 print(tupla[2])
                 dat =mp.get(control['model']['Años'],2015)
                 llaves = mp.keySet(control['model']['Años'])
+                
+                
                 print(llaves)
+                print(dat)
             elif int(inputs) == 2:
                 print_req_1(control)
 
