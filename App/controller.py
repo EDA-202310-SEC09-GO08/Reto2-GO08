@@ -107,12 +107,13 @@ def req_1(control):
     pass
 
 
-def req_2(control):
+def req_2(control,anio, sector):
     """
     Retorna el resultado del requerimiento 2
     """
     # TODO: Modificar el requerimiento 2
-    pass
+    res = model.req_2(control, anio, sector)
+    return res
 
 
 def req_3(control):
@@ -131,12 +132,13 @@ def req_4(control):
     pass
 
 
-def req_5(control):
+def req_5(control, anios):
     """
     Retorna el resultado del requerimiento 5
     """
     # TODO: Modificar el requerimiento 5
-    pass
+    respuesta = model.req_5(control,anios)
+    return respuesta 
 
 def req_6(control):
     """
@@ -146,12 +148,13 @@ def req_6(control):
     pass
 
 
-def req_7(control):
+def req_7(control, anios, codigo, num_actividades):
     """
     Retorna el resultado del requerimiento 7
     """
     # TODO: Modificar el requerimiento 7
-    pass
+    final = model.req_7(control, anios, codigo, num_actividades)
+    return final
 
 
 def req_8(control):
