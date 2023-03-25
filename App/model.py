@@ -229,8 +229,8 @@ def new_data(anio, cod_acti, nom_acti, cod_sector, nom_sector, cod_subsec, nom_s
 
 
 # Funciones de consulta
-def devolver_value(dic, key):
-    llave_valor = mp.get(dic, key)
+def devolver_value(map, key):
+    llave_valor = mp.get(map, key)
     valor = me.getValue(llave_valor)
     return valor 
 
@@ -280,12 +280,156 @@ def req_2(data_structs, anio, codigo):
                 
 
 
+
+
+
+
+     ####### REQ 3 Y FUNCIONES ASOCOIADAS
+
+
+
+
+
+def crear_lista_subsectores_por_anio(lista_actividades):
+   
+    dic_subsecs ={}
+    ## primero crea diccionario
+    lista_actividades = lt.iterator(lista_actividades)
+    
+    for impuesto in lista_actividades:
+        llave_subsector_dado =impuesto['Código subsector económico']
+        if llave_subsector_dado not in dic_subsecs.keys():
+            
+            dict_subsector_dado = {}
+            dict_subsector_dado['Año']=impuesto['Año']
+            dict_subsector_dado['Código sector económico']=impuesto['Código sector económico']
+            dict_subsector_dado['Nombre sector económico']=impuesto['Nombre sector económico']
+            dict_subsector_dado['Código subsector económico']=impuesto['Código subsector económico']
+            dict_subsector_dado['Nombre subsector económico']=impuesto['Nombre subsector económico']
+            dict_subsector_dado['Total retenciones']=float(impuesto['Total retenciones'])
+            dict_subsector_dado['Total ingresos netos']=float(impuesto['Total ingresos netos'])
+            dict_subsector_dado['Total costos y gastos']=float(impuesto['Total costos y gastos'])
+            dict_subsector_dado['Total saldo a pagar']=float(impuesto['Total saldo a pagar'])
+            dict_subsector_dado['Total saldo a favor']=float(impuesto['Total saldo a favor'])
+            dict_subsector_dado['Primeras y últimas 3 actividades en contribuir'] = 0
+
+            dic_subsecs[llave_subsector_dado]=dict_subsector_dado
+        else:
+            ## Va contando los totales
+            dict_subsector_dado =dic_subsecs[llave_subsector_dado]
+            dict_subsector_dado['Total retenciones']+=float(impuesto['Total retenciones'])
+            dict_subsector_dado['Total ingresos netos']+=float(impuesto['Total ingresos netos'])
+            dict_subsector_dado['Total costos y gastos']+=float(impuesto['Total costos y gastos'])
+            dict_subsector_dado['Total saldo a pagar']+=float(impuesto['Total saldo a pagar'])
+            dict_subsector_dado['Total saldo a favor']+=float(impuesto['Total saldo a favor'])
+    
+     ### Lista Tad       
+    lista_subsects=lt.newList(datastructure="ARRAY_LIST")
+    for llave in dic_subsecs.keys():
+        lt.addLast(lista_subsects,dic_subsecs[llave])
+
+    return lista_subsects
+
+def agregar_lista_de_6_a_subsector(subsector, lista_de_actividades_un_anio):
+        
+        ### vuelve array en objeto iterable
+        lista_de_actividades_un_anio_1 = lt.iterator(lista_de_actividades_un_anio)
+        codigo_subsect = subsector['Código subsector económico']
+       
+       
+       
+        #### Crear sublista del año solo de 1 subsecto Array
+        lista_acotada_de_ACTIVIDADES_anio_y_subsector = lt.newList('ARRAY_LIST')
+        #print(lt.size(lista_de_actividades_un_anio))
+        #print(codigo_subsect)
+       
+       
+       
+       
+        ### Agrega a la lista acotada los elementos filtrados por subsector
+        for actividad in lista_de_actividades_un_anio_1:
+           # print(type(actividad))
+           # print(actividad['Código subsector económico'])
+
+           ##Compara que sea del subsector dado
+            if codigo_subsect == actividad['Código subsector económico']:
+                lt.addLast(lista_acotada_de_ACTIVIDADES_anio_y_subsector,actividad)
+                
+        ### Ordena lista acotada por RETENCION
+        quk.sort(lista_acotada_de_ACTIVIDADES_anio_y_subsector,sort_criteria_retenciones)
+        #print(lista_acotada_de_ACTIVIDADES_anio_y_subsector)
+        tamanio = lt.size(lista_acotada_de_ACTIVIDADES_anio_y_subsector)
+        #print(tamanio)
+        #### Crea lista PYTHON de 6 actividades relevantes 
+        lista_6_activ_por_anio = []
+
+        ### Condición para prevenir error out of range
+        if tamanio>=6:
+        
+        
+            
+        
+            lista_6_activ_por_anio.append(lt.getElement(lista_acotada_de_ACTIVIDADES_anio_y_subsector,1))
+            lista_6_activ_por_anio.append(lt.getElement(lista_acotada_de_ACTIVIDADES_anio_y_subsector,2))
+            lista_6_activ_por_anio.append(lt.getElement(lista_acotada_de_ACTIVIDADES_anio_y_subsector,3))
+            lista_6_activ_por_anio.append(lt.getElement(lista_acotada_de_ACTIVIDADES_anio_y_subsector,tamanio-2))
+            lista_6_activ_por_anio.append(lt.getElement(lista_acotada_de_ACTIVIDADES_anio_y_subsector,tamanio-1))
+            lista_6_activ_por_anio.append(lt.getElement(lista_acotada_de_ACTIVIDADES_anio_y_subsector,tamanio))
+        else:
+            i =1
+            while i<=tamanio:
+                lista_6_activ_por_anio.append(lt.getElement(lista_acotada_de_ACTIVIDADES_anio_y_subsector,i))
+                i+=1
+        ### Añade la lista como elemento al dict subsect
+        subsector['Primeras y últimas 3 actividades en contribuir']= lista_6_activ_por_anio
+        #print(len(lista_6_activ_por_anio))
+        return subsector
+
+
+def encontrar_menor(lista, criterio):
+    
+    i =0
+    tamanio = lt.size(lista)
+    respuesta ={}
+    menor = 9999999999999
+    while i <= tamanio:
+        exacto = lt.getElement(lista,i)
+        if float(exacto[criterio])<float(menor):
+            respuesta = exacto
+            menor = exacto[criterio]
+        i+=1
+    return respuesta
 def req_3(data_structs):
     """
     Función que soluciona el requerimiento 3
     """
-    # TODO: Realizar el requerimiento 3
-    pass
+    lista_dicts_menores_anios = lt.newList('ARRAY_LIST')
+    
+    mapa_anios = data_structs['Años']
+
+    lista_llaves_anios = quk.sort(mp.keySet(mapa_anios))
+    
+    tamanio_lista_llaves = lt.size(lista_llaves_anios)
+    i = 1
+
+    while i <= tamanio_lista_llaves:
+
+        llave_anio_dado = lt.getElement(lista_llaves_anios,i)
+
+        lista_actividades_un_anio_dado = devolver_value(mapa_anios,lista_llaves_anios)
+
+        ####crea lista subsectkores patra el año dado
+        lista_subsects_un_anio_dado = crear_lista_subsectores_por_anio(lista_actividades_un_anio_dado)
+
+        ##encuentra menor subsect por retenciones
+        menor = encontrar_menor(lista_subsects_un_anio_dado, 'Total retenciones')
+        agregar_lista_de_6_a_subsector(menor,lista_actividades_un_anio_dado)
+        lt.addLast(lista_dicts_menores_anios,menor)
+
+        i +=1
+    quk.sort(lista_dicts_menores_anios,sort_criteria)
+    return lista_dicts_menores_anios
+
 
 
 def req_4(data_structs):
