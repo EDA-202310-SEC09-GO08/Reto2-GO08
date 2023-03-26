@@ -232,6 +232,7 @@ def new_data(anio, cod_acti, nom_acti, cod_sector, nom_sector, cod_subsec, nom_s
 def devolver_value(map, key):
     llave_valor = mp.get(map, key)
     valor = me.getValue(llave_valor)
+    
     return valor 
 
 def get_data(data_structs, id):
@@ -406,38 +407,29 @@ def sort_criteria_retenciones(a,b):
         cod_2 = b['Total retenciones'].split()[0].split('/')[0]
         return(float(cod_1)<float(cod_2))
 
-def req_3(data_structs):
+def req_3(data_structs,anio):
     """
     Función que soluciona el requerimiento 3
     """
-    lista_dicts_menores_anios = lt.newList('ARRAY_LIST')
+    anio_llave = int(anio)
+    
     
     mapa_anios = data_structs['Años']
 
-    lista_llaves_anios = quk.sort(mp.keySet(mapa_anios))
     
-    tamanio_lista_llaves = lt.size(lista_llaves_anios)
-    i = 1
 
-    while i <= tamanio_lista_llaves:
+    array_anio = devolver_value(mapa_anios,anio_llave)['Lista']
 
-        llave_anio_dado = lt.getElement(lista_llaves_anios,i)
-
-        lista_actividades_un_anio_dado = devolver_value(mapa_anios,lista_llaves_anios)
-
-        ####crea lista subsectkores patra el año dado
-        lista_subsects_un_anio_dado = crear_lista_subsectores_por_anio(lista_actividades_un_anio_dado)
+    lista_subsects_anio = crear_lista_subsectores_por_anio(array_anio)
 
         ##encuentra menor subsect por retenciones
-        menor = encontrar_menor(lista_subsects_un_anio_dado, 'Total retenciones')
-        agregar_lista_de_6_a_subsector(menor,lista_actividades_un_anio_dado)
-        lt.addLast(lista_dicts_menores_anios,menor)
+    menor = encontrar_menor(lista_subsects_anio, 'Total retenciones')
+    agregar_lista_de_6_a_subsector(menor,array_anio)
+    
+    return menor
 
-        i +=1
-    quk.sort(lista_dicts_menores_anios,sort_criteria)
-    return lista_dicts_menores_anios
-
-
+def sort_crit_gen(dato_1,dato_2):
+    return(float(dato_1)<float(dato_2))
 
 def req_4(data_structs):
     """
@@ -595,7 +587,7 @@ def compare(data_1, data_2):
 # Funciones de ordenamiento
 
 
-def sort_criteria(data_1, data_2):
+def sort_criteria(impuesto_1, impuesto_2):
     """sortCriteria criterio de ordenamiento para las funciones de ordenamiento
 
     Args:
@@ -605,8 +597,16 @@ def sort_criteria(data_1, data_2):
     Returns:
         _type_: _description_
     """
-    #TODO: Crear función comparadora para ordenar
-    pass
+    
+    if impuesto_1['Año']!= impuesto_2['Año']:
+        cod_1 = impuesto_1['Año'].split()[0]
+        cod_2 = impuesto_2['Año'].split()[0]
+        return(float(impuesto_1['Año'])> float(impuesto_2['Año']))
+    
+    else:
+        cod_1 = impuesto_1['Código actividad económica'].split()[0].split('/')[0]
+        cod_2 = impuesto_2['Código actividad económica'].split()[0].split('/')[0]
+        return(float(cod_1)>float(cod_2))
 
 
 def sort(data_structs):

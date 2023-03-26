@@ -78,10 +78,10 @@ def filtrar_dic_con_por_llaves(dic, lista_de_columnas_aMostrar):
 
 def filtrar_lista_dics_por_columnas(lista_dics,lista_columnas):
     lista_filt = []
-
+    
     tamanio_lista = len(lista_dics)
     i = 0
-
+    
     while i<tamanio_lista:
         dic_filt_dado = filtrar_dic_con_por_llaves(lista_dics[i],lista_columnas)
         lista_filt.append(dic_filt_dado)
@@ -301,16 +301,20 @@ def print_req_2(control):
     print(tabulate([respuesta], headers="keys", tablefmt= "grid", maxcolwidths=15, maxheadercolwidths=15  ))
 
 
-def print_req_3(control):
+def print_req_3(control,anio):
     """
         Función que imprime la solución del Requerimiento 3 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 3
-    req_3 = controller.req_3(control)
+    req_3 = controller.req_3(control,anio)
 
-    respuesta = req_3[0]['elements']
+    respuesta = [req_3[0]]
 
-    respuesta_filtrada =filtrar_lista_dics_por_columnas( respuesta,['Año','Código sector económico',
+    
+
+    
+
+    respuesta_filtrada =filtrar_lista_dics_por_columnas( respuesta,['Código sector económico',
                                               'Nombre sector económico','Código subsector económico',
                                           'Nombre subsector económico', 'Total retenciones','Total ingresos netos',
                                           'Total costos y gastos','Total saldo a pagar','Total saldo a favor'])
@@ -470,7 +474,8 @@ if __name__ == "__main__":
                 print_req_2(control)
 
             elif int(inputs) == 4:
-                print_req_3(control)
+                anio = input('Ingrese un año: ')
+                print_req_3(control,anio)
 
             elif int(inputs) == 5:
                 print_req_4(control)

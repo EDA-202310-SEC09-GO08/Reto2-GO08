@@ -116,12 +116,19 @@ def req_2(control,anio, sector):
     return res
 
 
-def req_3(control):
+def req_3(control,anio):
     """
     Retorna el resultado del requerimiento 3
     """
     # TODO: Modificar el requerimiento 3
-    pass
+    start_time = get_time()
+    req_3 = model.req_3(control["model"],anio)
+    end_time = get_time()
+    delta_t = delta_time(start_time,end_time)
+   
+    tamanio = 3
+
+    return req_3, tamanio, delta_t
 
 
 def req_4(control):
