@@ -614,7 +614,7 @@ def crear_lista_sectores_totalizados_por_anio(lista_subsectores):
 
     ### iteración para añadir subsector a lista
     for llave in lista_llaves:
-        lt.addLast(lista_sects,devolver_value,llave)
+        lt.addLast(lista_sects,devolver_value(mapa_secs,llave))
 
     return lista_sects
 
@@ -627,7 +627,7 @@ def encontrar_mayor_con_condicion(lista, criterio_mayor,criterio_condicion=None,
     while i <= tamanio:
         dato = lt.getElement(lista,i)
 
-        if dato[criterio_condicion] ==  condicion or condicion ==True:
+        if condicion ==True or dato[criterio_condicion] ==  condicion:
         
              if float(dato[criterio_mayor])>float(mayor):
                 mayor = dato[criterio_mayor]
@@ -645,7 +645,7 @@ def encontrar_menor_con_condicion(lista, criterio_menor,criterio_condicion=None,
     while i <= tamanio:
         dato = lt.getElement(lista,i)
 
-        if dato[criterio_condicion] ==  condicion or condicion ==True:
+        if condicion ==True or dato[criterio_condicion] ==  condicion:
         
              if float(dato[criterio_menor])<float(menor):
                 menor = dato[criterio_menor]
@@ -658,6 +658,7 @@ def req_6(data_structs, anio):
     """
     Función que soluciona el requerimiento 6
     """
+    anio = int(anio)
     map_anios = data_structs['Años']
     array_del_anio = devolver_value(map_anios,anio)['Lista']
     

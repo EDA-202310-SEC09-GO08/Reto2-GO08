@@ -393,12 +393,105 @@ def print_req_5(control):
     
 
 
-def print_req_6(control):
-    """
-        Función que imprime la solución del Requerimiento 6 en consola
-    """
-    # TODO: Imprimir el resultado del requerimiento 6
-    pass
+def print_req_6(control,anio,memory):
+    req_6 = controller.req_6(control,anio,memory)
+    respuesta = req_6[0]
+    req_6_lista = [req_6[0]]
+    req_6_tiempo = req_6[1]
+    req_6_memory = req_6[2]
+
+    respuesta_filtrada =filtrar_lista_dics_por_columnas( req_6_lista,['Código sector económico',
+                                              'Nombre sector económico','Total ingresos netos',
+                                          'Total costos y gastos','Total saldo a pagar','Total saldo a favor'])
+
+
+    tabulate_respuesta = tabulate(respuesta_filtrada, headers='keys', maxcolwidths =[15]*6, maxheadercolwidths=[15]*6)
+    print(tabulate_respuesta)
+
+   
+
+    subsector_mayor = respuesta['Subsector que más contribuyó']
+        #print(subsector_mayor)
+    subsector_mayor_filt = filtrar_dic_con_por_llaves(subsector_mayor,['Código subsector económico',
+                                              'Nombre subsector económico','Total ingresos netos',
+                                          'Total costos y gastos','Total saldo a pagar','Total saldo a favor'])
+        
+        #print(subsector_mayor_filt)
+        
+    subsect_mayor_tab = tabulate([subsector_mayor_filt], headers='keys', maxcolwidths =[15]*6, maxheadercolwidths=[15]*6)
+    print(subsect_mayor_tab)
+        
+    print('Para el dicho subsector que más aporto, las actividades que más y menos aportaron respectivamente son:')
+
+    actividad_mas_subsector_mayor = subsector_mayor['Actividad que más contribuyó']
+    actividad_menos_subsector_mayor = subsector_mayor['Actividad que menos contribuyó']
+
+    actividad_mas_subsector_mayor_filt = filtrar_dic_con_por_llaves(actividad_mas_subsector_mayor,['Código actividad económica',
+                                              'Nombre actividad económica','Total ingresos netos',
+                                          'Total costos y gastos','Total saldo a pagar','Total saldo a favor'])
+        
+        #print(actividad_mas_subsector_mayor_filt)
+        
+    actividad_menos_subsector_mayor_filt = filtrar_dic_con_por_llaves(actividad_menos_subsector_mayor,['Código actividad económica',
+                                              'Nombre actividad económica','Total ingresos netos',
+                                          'Total costos y gastos','Total saldo a pagar','Total saldo a favor'])
+        
+
+    tab_mayor_mayor = tabulate([actividad_mas_subsector_mayor_filt], headers='keys', maxcolwidths =[15]*6, maxheadercolwidths=[15]*6)
+    tab_mayor_menor = tabulate([actividad_menos_subsector_mayor_filt], headers='keys', maxcolwidths =[15]*6, maxheadercolwidths=[15]*6)
+    print(tab_mayor_mayor)
+    print(tab_mayor_menor)
+
+
+
+        ### Ahora con menor
+
+    subsector_menor = respuesta['subsector que menos aportó']
+        #print(subsector_mayor)
+    subsector_menor_filt = filtrar_dic_con_por_llaves(subsector_menor,['Código subsector económico',
+                                              'Nombre subsector económico','Total ingresos netos',
+                                          'Total costos y gastos','Total saldo a pagar','Total saldo a favor'])
+        
+        #print(subsector_mayor_filt)
+        
+    subsect_menor_tab = tabulate([subsector_menor_filt], headers='keys', maxcolwidths =[15]*6, maxheadercolwidths=[15]*6)
+    print(subsect_menor_tab)
+        
+    print('Para el dicho subsector que MENOS aporto, las actividades que MÁS y MENOS aportaron respectivamente son:')
+
+    actividad_mas_subsector_menor = subsector_menor['Actividad que más contribuyó']
+    actividad_menos_subsector_menor = subsector_menor['Actividad que menos contribuyó']
+
+    actividad_mas_subsector_menor_filt = filtrar_dic_con_por_llaves(actividad_mas_subsector_menor,['Código actividad económica',
+                                              'Nombre actividad económica','Total ingresos netos',
+                                          'Total costos y gastos','Total saldo a pagar','Total saldo a favor'])
+        
+        #print(actividad_mas_subsector_mayor_filt)
+        
+    actividad_menos_subsector_menor_filt = filtrar_dic_con_por_llaves(actividad_menos_subsector_menor,['Código actividad económica',
+                                              'Nombre actividad económica','Total ingresos netos',
+                                          'Total costos y gastos','Total saldo a pagar','Total saldo a favor'])
+        
+
+    tab_menor_mayor = tabulate([actividad_mas_subsector_menor_filt], headers='keys', maxcolwidths =[15]*6, maxheadercolwidths=[15]*6)
+    tab_menor_menor = tabulate([actividad_menos_subsector_menor_filt], headers='keys', maxcolwidths =[15]*6, maxheadercolwidths=[15]*6)
+    print(tab_menor_mayor)
+    print(tab_menor_menor)
+
+
+
+    
+      
+
+    #df_sectores = pd.DataFrame(req_6_lista)
+    #df_sectores_imprimir = df_sectores[['Nombre sector económico','Total ingresos netos']]
+
+    
+    #print(df_sectores_imprimir)
+
+    print('TAMAÑO: ',req_6_tiempo)
+    print('TIEMPO: ', req_6_memory)
+
 
 
 def print_req_7(control):
@@ -487,7 +580,9 @@ if __name__ == "__main__":
                 print_req_5(control)
 
             elif int(inputs) == 7:
-                print_req_6(control)
+                anio = input('Ingrese un año: ')
+                memory = menu_espacio()               
+                print_req_6(control,anio,memory)
 
             elif int(inputs) == 8:
                 print_req_7(control)

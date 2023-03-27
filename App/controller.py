@@ -169,7 +169,7 @@ def req_6(control,anio,memory):
         tracemalloc.start()
         start_memory = get_memory() 
     start_time = get_time()
-    req_3 = model.req_3(control["model"],anio)
+    req_6 = model.req_6(control["model"],anio)
     if memory is True:
         stop_memory = get_memory()
         tracemalloc.stop()
@@ -182,7 +182,7 @@ def req_6(control,anio,memory):
    
     
 
-    return control,delta_t, delta_m
+    return req_6,delta_t, delta_m
 
 def req_7(control, anios, codigo, num_actividades):
     """
