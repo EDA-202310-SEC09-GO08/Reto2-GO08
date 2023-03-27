@@ -591,6 +591,7 @@ if __name__ == "__main__":
 
                 control = new_controller(tipo,factor)
                 tupla = load_data(control,filename,memory)
+                print_3_primeros_3_ultimos(control)
                 
                 print('Tamaño: ')
                 print(lt.size(control['model']['Lista actividades general']))
@@ -601,7 +602,7 @@ if __name__ == "__main__":
                 #dat =mp.get(control['model']['Años'],2015)
                 #llaves = mp.keySet(control['model']['Años'])
                 
-                print_3_primeros_3_ultimos(control)
+
                 #print(llaves)
                # print(dat)
             elif int(inputs) == 2:
