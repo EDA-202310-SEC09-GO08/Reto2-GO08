@@ -61,6 +61,20 @@ def new_data_structs(tipo,factor):
 
 
 # Funciones para agregar informacion al modelo
+def ordenar_map_anios_para_view(data_structs):
+    mapa=data_structs['Años']
+    llaves = mp.keySet(mapa)
+
+    llaves = lt.iterator(llaves)
+    for anio in llaves:
+        array = devolver_value(mapa,anio)['Lista']
+        array = quk.sort(array,sort_cod_activ)
+    return data_structs
+
+def sort_cod_activ(dato1,dato_2):
+        cod_1 = dato1['Código actividad económica'].split()[0].split('/')[0]
+        cod_2 = dato_2['Código actividad económica'].split()[0].split('/')[0]
+        return(float(cod_1)>float(cod_2))
 
 def add_data(data_structs, data):
     """

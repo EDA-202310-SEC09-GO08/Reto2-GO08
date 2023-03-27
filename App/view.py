@@ -109,6 +109,43 @@ def new_controller(tipo,factor):
 
     return control
 
+def devolver_value(map, key):
+    llave_valor = mp.get(map, key)
+    valor = me.getValue(llave_valor)
+    
+    return valor 
+def print_3_primeros_3_ultimos(control):
+    
+    mapa = control['model']['Años']
+
+    ### Crear lista para cada año a imprimir
+    tamanio_mapa =lt.size(mp.keySet(mapa))
+    anio = 2012
+
+    while anio <2012+tamanio_mapa:
+        array_anio = devolver_value(mapa,anio)['Lista']
+        tamanio_array = lt.size(array_anio)
+        lista_imprimir_anio = []
+
+        if tamanio_array>=6:
+            lista_imprimir_anio.append(lt.getElement(array_anio,1))
+            lista_imprimir_anio.append(lt.getElement(array_anio,2))
+            lista_imprimir_anio.append(lt.getElement(array_anio,3))
+            lista_imprimir_anio.append(lt.getElement(array_anio,tamanio_array-2))
+            lista_imprimir_anio.append(lt.getElement(array_anio,tamanio_array-1))
+            lista_imprimir_anio.append(lt.getElement(array_anio,tamanio_array))
+
+        else:
+            i =1
+            while i<=tamanio_array:
+                lista_imprimir_anio.append(lt.getElement(array_anio,i))
+                i+=1
+
+        lista_filtrada = filtrar_lista_dics_por_columnas(lista_imprimir_anio,['Año', "Código actividad económica","Nombre actividad económica","Código sector económico","Nombre sector económico",
+    "Código subsector económico","Nombre subsector económico","Total ingresos netos", "Total costos y gastos", "Total saldo a pagar", "Total saldo a favor"])
+
+
+
 
 def print_menu():
     print("Bienvenido")

@@ -64,6 +64,7 @@ def load_data(control, filename,memory):
     for line in input_file:
         model.add_data(catalog, line)
 
+    model.ordenar_map_anios_para_view(control['model'])
     stop_time =get_time()
 
     delta = delta_time(start_time, stop_time)
