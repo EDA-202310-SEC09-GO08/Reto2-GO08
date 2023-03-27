@@ -343,14 +343,15 @@ def req_2(data_structs, anio, codigo):
 
 
 def crear_lista_subsectores_por_anio(lista_actividades):
-   
-    dic_subsecs ={}
-    ## primero crea diccionario
+    mapa_subsects= mp.newMap()
+    ## primero crea mapa de subsectores vacío
     lista_actividades = lt.iterator(lista_actividades)
     
     for impuesto in lista_actividades:
         llave_subsector_dado =impuesto['Código subsector económico']
-        if llave_subsector_dado not in dic_subsecs.keys():
+
+        existe = mp.contains(mapa_subsects,llave_subsector_dado)
+        if existe ==False:
             
             dict_subsector_dado = {}
             dict_subsector_dado['Año']=impuesto['Año']
@@ -365,10 +366,10 @@ def crear_lista_subsectores_por_anio(lista_actividades):
             dict_subsector_dado['Total saldo a favor']=float(impuesto['Total saldo a favor'])
             dict_subsector_dado['Primeras y últimas 3 actividades en contribuir'] = 0
 
-            dic_subsecs[llave_subsector_dado]=dict_subsector_dado
+            mp.put(mapa_subsects,llave_subsector_dado,dict_subsector_dado)
         else:
             ## Va contando los totales
-            dict_subsector_dado =dic_subsecs[llave_subsector_dado]
+            dict_subsector_dado =devolver_value(mapa_subsects,llave_subsector_dado)
             dict_subsector_dado['Total retenciones']+=float(impuesto['Total retenciones'])
             dict_subsector_dado['Total ingresos netos']+=float(impuesto['Total ingresos netos'])
             dict_subsector_dado['Total costos y gastos']+=float(impuesto['Total costos y gastos'])
@@ -377,8 +378,12 @@ def crear_lista_subsectores_por_anio(lista_actividades):
     
      ### Lista Tad       
     lista_subsects=lt.newList(datastructure="ARRAY_LIST")
-    for llave in dic_subsecs.keys():
-        lt.addLast(lista_subsects,dic_subsecs[llave])
+
+    lista_llaves = lt.iterator(mp.keySet(mapa_subsects))
+
+    ### iteración para añadir subsector a lista
+    for llave in lista_llaves:
+        lt.addLast(lista_subsects,devolver_value(mapa_subsects,llave))
 
     return lista_subsects
 
@@ -567,17 +572,65 @@ def req_5(data_structs, anio):
     return respuesta, final, sector_mayor
 
 
+##### REQ 6
+
+def crear_lista_sectores_totalizados_por_anio(lista_subsectores):
+   
+    mapa_secs = mp.newMap()
+    ## primero crea mapa de subsectores vacío
+    lista_subsectores = lt.iterator(lista_subsectores)
+    
+    for subsector in lista_subsectores:
+        llave_sector_dado =subsector['Código sector económico']
+
+        existe = mp.contains(mapa_secs,llave_sector_dado)
+        if existe ==False:
+            
+            dict_sector_dado = {}
+            dict_sector_dado['Año']=subsector['Año']
+            dict_sector_dado['Código sector económico']=subsector['Código sector económico']
+            dict_sector_dado['Nombre sector económico']=subsector['Nombre sector económico']
+            dict_sector_dado['Total retenciones']=float(subsector['Total retenciones'])
+            dict_sector_dado['Total ingresos netos']=float(subsector['Total ingresos netos'])
+            dict_sector_dado['Total costos y gastos']=float(subsector['Total costos y gastos'])
+            dict_sector_dado['Total saldo a pagar']=float(subsector['Total saldo a pagar'])
+            dict_sector_dado['Total saldo a favor']=float(subsector['Total saldo a favor'])
+            dict_sector_dado['Primeras y últimas 3 actividades en contribuir'] = 0
+
+            mp.put(mapa_secs,llave_sector_dado,dict_sector_dado)
+        else:
+            ## Va contando los totales
+            dict_sector_dado =devolver_value(mapa_secs,llave_sector_dado)
+            dict_sector_dado['Total retenciones']+=float(subsector['Total retenciones'])
+            dict_sector_dado['Total ingresos netos']+=float(subsector['Total ingresos netos'])
+            dict_sector_dado['Total costos y gastos']+=float(subsector['Total costos y gastos'])
+            dict_sector_dado['Total saldo a pagar']+=float(subsector['Total saldo a pagar'])
+            dict_sector_dado['Total saldo a favor']+=float(subsector['Total saldo a favor'])
+    
+     ### Lista Tad       
+    lista_sects=lt.newList(datastructure="ARRAY_LIST")
+
+    lista_llaves = lt.iterator(mp.keySet(mapa_secs))
+
+    ### iteración para añadir subsector a lista
+    for llave in lista_llaves:
+        lt.addLast(lista_sects,devolver_value,llave)
+
+    return lista_sects
+
+
+
 def req_6(data_structs, anio):
     """
     Función que soluciona el requerimiento 6
     """
     map_anios = data_structs['Años']
     array_del_anio = devolver_value(map_anios,anio)['Lista']
-    tamanio_array_anio = lt.size(array_del_anio)
+    
 
 
     #### Crear map de actividades por subsector (llave subsector, valor array de actividades)
-    dic_subsectores = crear_diccionario_de_TAD(array_del_anio, 'Código subsector económico', tamanio_array_anio )
+
 
     ### crea lista totalizada de subsectores
 
