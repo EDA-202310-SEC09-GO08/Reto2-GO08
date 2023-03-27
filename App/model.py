@@ -74,7 +74,7 @@ def ordenar_map_anios_para_view(data_structs):
 def sort_cod_activ(dato1,dato_2):
         cod_1 = dato1['Código actividad económica'].split()[0].split('/')[0]
         cod_2 = dato_2['Código actividad económica'].split()[0].split('/')[0]
-        return(float(cod_1)>float(cod_2))
+        return(float(cod_1)<float(cod_2))
 
 def add_data(data_structs, data):
     """

@@ -143,6 +143,11 @@ def print_3_primeros_3_ultimos(control):
 
         lista_filtrada = filtrar_lista_dics_por_columnas(lista_imprimir_anio,['Año', "Código actividad económica","Nombre actividad económica","Código sector económico","Nombre sector económico",
     "Código subsector económico","Nombre subsector económico","Total ingresos netos", "Total costos y gastos", "Total saldo a pagar", "Total saldo a favor"])
+        
+        tabulate_respuesta = tabulate(lista_filtrada, headers='keys', maxcolwidths =[10]*11, maxheadercolwidths=[10]*11)
+        print('Las primeras y últimas actividades económicas para ',anio,' son: ')
+        print(tabulate_respuesta)
+        anio += 1
 
 
 
@@ -593,12 +598,12 @@ if __name__ == "__main__":
                 print(tupla[1])
                 print('memoria: ')
                 print(tupla[2])
-                dat =mp.get(control['model']['Años'],2015)
-                llaves = mp.keySet(control['model']['Años'])
+                #dat =mp.get(control['model']['Años'],2015)
+                #llaves = mp.keySet(control['model']['Años'])
                 
-                
-                print(llaves)
-                print(dat)
+                print_3_primeros_3_ultimos(control)
+                #print(llaves)
+               # print(dat)
             elif int(inputs) == 2:
                 print_req_1(control)
 
