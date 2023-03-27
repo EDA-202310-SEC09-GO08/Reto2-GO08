@@ -134,7 +134,7 @@ def add_data_y_o_casilla_al_mapa(mapa, data,parametro):
         array_asociado = me.getValue(entry)
     else:
         array_asociado = new_casilla()
-        mp.put(mapa,llave_casilla,llave_casilla)
+        mp.put(mapa,llave_casilla,array_asociado)
     
     lt.addLast(array_asociado,data)
 
