@@ -516,13 +516,85 @@ def req_5(data_structs, anio):
     return respuesta, final, sector_mayor
 
 
-def req_6(data_structs):
+def req_6(data_structs, anio):
     """
     Función que soluciona el requerimiento 6
     """
-    # TODO: Realizar el requerimiento 6
-    pass
+    tamanio_data_struct = data_size(data_structs)
+    dic_anios = crear_diccionario (data_structs, 'data' ,'Año',tamanio_data_struct)
+    array_del_anio = dic_anios[anio]
+    tamanio_array_anio = lt.size(array_del_anio)
 
+
+    #### Crear dic de actividades por subsector (llave subsector, valor array de actividades)
+    dic_subsectores = crear_diccionario_de_TAD(array_del_anio, 'Código subsector económico', tamanio_array_anio )
+
+    ### crea lista totalizada de subsectores
+
+    lista_subsectores = crear_lista_subsectores_por_anio(array_del_anio)
+
+
+    ### Crea lista de sectores más general
+
+    lista_sectores = crear_lista_sectores_totalizados_por_anio(lista_subsectores)
+
+    
+    
+    ### Encontray y añadir mayor y menos
+    for sector in lt.iterator(lista_sectores):
+        
+        codigo_sector_dado = sector['Código sector económico']
+
+        ###Proceso con mayor
+
+        mayor_subsector_para_sector_dado = encontrar_mayor_con_condicion(lista_subsectores,'Total ingresos netos',codigo_sector_dado)
+
+        codigo_mayor_subsector = mayor_subsector_para_sector_dado['Código subsector económico']
+
+        lista_actividades_subsector_MAY_dado = dic_subsectores[codigo_mayor_subsector]
+
+        mayor_actividad_mayor_subsector = encontrar_mayor(lista_actividades_subsector_MAY_dado,'Total ingresos netos')
+
+        menor_actividad_mayor_subsector = encontrar_menor(lista_actividades_subsector_MAY_dado, 'Total ingresos netos')
+
+        ## añadir mayor y menor actividad a mayor subsector
+
+        mayor_subsector_para_sector_dado['Actividad que más contribuyó']= mayor_actividad_mayor_subsector
+
+        mayor_subsector_para_sector_dado['Actividad que menos contribuyó']=menor_actividad_mayor_subsector
+
+        ### añadir mayor subsector a sector dado
+
+        sector['Subsector que más contribuyó'] = mayor_subsector_para_sector_dado
+
+
+
+
+    ##### Proceso con menor
+
+        menor_subsector_para_sector_dado = encontrar_menor_con_condicion(lista_subsectores, 'Total ingresos netos', codigo_sector_dado)
+        
+        codigo_menor_subsector = menor_subsector_para_sector_dado['Código subsector económico']
+
+        lista_actividades_subsector_menor = dic_subsectores[codigo_menor_subsector]
+
+        mayor_actividad_menor_subsector = encontrar_mayor(lista_actividades_subsector_menor,'Total ingresos netos')
+
+        menor_actividad_menor_subsector = encontrar_menor(lista_actividades_subsector_menor,'Total ingresos netos')
+
+        ## Añadir mayor y menor actividad a menor subsector
+
+        menor_subsector_para_sector_dado['Actividad que más contribuyó']=mayor_actividad_menor_subsector
+
+        menor_subsector_para_sector_dado['Actividad que menos contribuyó']= menor_actividad_menor_subsector
+
+
+
+        ### Añadir menor subsector a sector dado
+        sector['subsector que menos aportó'] = menor_subsector_para_sector_dado
+
+
+    return lista_sectores
 
 def req_7(data_structs, anio, codigo, num_actividades):
     """
