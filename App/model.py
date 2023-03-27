@@ -618,7 +618,7 @@ def crear_lista_sectores_totalizados_por_anio(lista_subsectores):
 
     return lista_sects
 
-def encontrar_mayor_con_condicion(lista, criterio, condicion=True):
+def encontrar_mayor_con_condicion(lista, criterio_mayor,criterio_condicion=None, condicion=True):
     
     i =1
     tamanio = lt.size(lista)
@@ -627,16 +627,16 @@ def encontrar_mayor_con_condicion(lista, criterio, condicion=True):
     while i <= tamanio:
         dato = lt.getElement(lista,i)
 
-        if dato[criterio] ==  condicion or condicion ==True:
+        if dato[criterio_condicion] ==  condicion or condicion ==True:
         
-             if float(dato[criterio])>float(mayor):
-                mayor = dato[criterio]
+             if float(dato[criterio_mayor])>float(mayor):
+                mayor = dato[criterio_mayor]
                 respuesta = dato
         i+=1
     return respuesta      
 
 
-def encontrar_menor_con_condicion(lista, criterio, condicion=True):
+def encontrar_menor_con_condicion(lista, criterio_menor,criterio_condicion=None, condicion=True):
     
     i =1
     tamanio = lt.size(lista)
@@ -645,10 +645,10 @@ def encontrar_menor_con_condicion(lista, criterio, condicion=True):
     while i <= tamanio:
         dato = lt.getElement(lista,i)
 
-        if dato[criterio] ==  condicion or condicion ==True:
+        if dato[criterio_condicion] ==  condicion or condicion ==True:
         
-             if float(dato[criterio])<float(menor):
-                menor = dato[criterio]
+             if float(dato[criterio_menor])<float(menor):
+                menor = dato[criterio_menor]
                 respuesta = dato
         i+=1
     return respuesta      
@@ -678,14 +678,14 @@ def req_6(data_structs, anio):
     
     #### Encontrar mayor sector
 
-    mayor_sector = encontrar_mayor_con_condicion(lista_sectores,'Código sector económico')
+    mayor_sector = encontrar_mayor_con_condicion(lista_sectores,'Total ingresos netos')
 
         
     codigo_sector_mayor = mayor_sector['Código sector económico']
 
         ###Proceso con mayor
 
-        mayor_subsector_para_sector_dado = encontrar_mayor_con_condicion(lista_subsectores,'Total ingresos netos',codigo_sector_dado)
+    mayor_subsector_para_sector_dado = encontrar_mayor_con_condicion(lista_subsectores,'Total ingresos netos',codigo_sector_mayor)
 
         codigo_mayor_subsector = mayor_subsector_para_sector_dado['Código subsector económico']
 
