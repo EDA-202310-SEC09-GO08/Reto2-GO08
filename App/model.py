@@ -618,6 +618,40 @@ def crear_lista_sectores_totalizados_por_anio(lista_subsectores):
 
     return lista_sects
 
+def encontrar_mayor_con_condicion(lista, criterio, condicion=True):
+    
+    i =1
+    tamanio = lt.size(lista)
+    mayor = 0
+    respuesta ={}
+    while i <= tamanio:
+        dato = lt.getElement(lista,i)
+
+        if dato[criterio] ==  condicion or condicion ==True:
+        
+             if float(dato[criterio])>float(mayor):
+                mayor = dato[criterio]
+                respuesta = dato
+        i+=1
+    return respuesta      
+
+
+def encontrar_menor_con_condicion(lista, criterio, condicion=True):
+    
+    i =1
+    tamanio = lt.size(lista)
+    menor = 999999999999999999
+    respuesta ={}
+    while i <= tamanio:
+        dato = lt.getElement(lista,i)
+
+        if dato[criterio] ==  condicion or condicion ==True:
+        
+             if float(dato[criterio])<float(menor):
+                menor = dato[criterio]
+                respuesta = dato
+        i+=1
+    return respuesta      
 
 
 def req_6(data_structs, anio):
@@ -642,11 +676,12 @@ def req_6(data_structs, anio):
     lista_sectores = crear_lista_sectores_totalizados_por_anio(lista_subsectores)
 
     
-    
-    ### Encontray y añadir mayor y menos
-    for sector in lt.iterator(lista_sectores):
+    #### Encontrar mayor sector
+
+    mayor_sector = encontrar_mayor_con_condicion(lista_sectores,'Código sector económico')
+
         
-        codigo_sector_dado = sector['Código sector económico']
+    codigo_sector_mayor = mayor_sector['Código sector económico']
 
         ###Proceso con mayor
 
