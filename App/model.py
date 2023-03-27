@@ -88,6 +88,7 @@ def add_impuesto_anio(data_structs, impuesto):
     
     lt.addLast(year['Lista'],impuesto)
 
+
 def newYear(year):
     """
     Esta funcion crea la estructura de libros asociados
@@ -97,6 +98,56 @@ def newYear(year):
     entry['Año'] = year
     entry['Lista'] = lt.newList('ARRAY_LIST', compareYears)
     return entry
+
+#### Map de item dado por parámetro que reemplaza diccionarios (req 6)
+
+
+def crear_mapa_de_columna_a_partir_de_ARRAy(array, columna):
+
+ 
+    mapa = mp.newMap(40, maptype='CHAINING' , loadfactor=0.5)
+    
+    ### Iteración para añadir
+    i = 1
+    tamanio_array = lt.size(array)
+    while i<=tamanio_array:
+
+        data = lt.getElement(array,i)
+
+        add_data_y_o_casilla_al_mapa(mapa,data,columna)
+
+        i+=1
+    
+    return mapa
+
+    
+
+    
+def add_data_y_o_casilla_al_mapa(mapa, data,parametro):
+ 
+    llave_casilla = data[parametro]
+    
+
+    exist_casilla = mp.contains(mapa,llave_casilla)
+    if exist_casilla:
+        entry = mp.get(mapa,llave_casilla)
+        array_asociado = me.getValue(entry)
+    else:
+        array_asociado = new_casilla()
+        mp.put(mapa,llave_casilla,llave_casilla)
+    
+    lt.addLast(array_asociado,data)
+
+
+def new_casilla():
+    """
+    Esta funcion crea la estructura de libros asociados
+    a un año.
+    """
+   
+    entry = lt.newList('ARRAY_LIST', compareYears)
+    return entry
+
 
 def organizar_sector(data_structs,subdivision):
     llaves = mp.keySet(data_structs["model"]["Años"])
@@ -520,13 +571,12 @@ def req_6(data_structs, anio):
     """
     Función que soluciona el requerimiento 6
     """
-    tamanio_data_struct = data_size(data_structs)
-    dic_anios = crear_diccionario (data_structs, 'data' ,'Año',tamanio_data_struct)
-    array_del_anio = dic_anios[anio]
+    map_anios = data_structs['Años']
+    array_del_anio = devolver_value(map_anios,anio)['Lista']
     tamanio_array_anio = lt.size(array_del_anio)
 
 
-    #### Crear dic de actividades por subsector (llave subsector, valor array de actividades)
+    #### Crear map de actividades por subsector (llave subsector, valor array de actividades)
     dic_subsectores = crear_diccionario_de_TAD(array_del_anio, 'Código subsector económico', tamanio_array_anio )
 
     ### crea lista totalizada de subsectores
