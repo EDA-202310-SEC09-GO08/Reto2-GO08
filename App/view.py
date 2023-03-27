@@ -301,14 +301,16 @@ def print_req_2(control):
     print(tabulate([respuesta], headers="keys", tablefmt= "grid", maxcolwidths=15, maxheadercolwidths=15  ))
 
 
-def print_req_3(control,anio):
+def print_req_3(control,anio,memory):
     """
         Función que imprime la solución del Requerimiento 3 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 3
-    req_3 = controller.req_3(control,anio)
+    req_3 = controller.req_3(control,anio,memory)
 
     respuesta = [req_3[0]]
+
+    
 
     
 
@@ -347,8 +349,8 @@ def print_req_3(control,anio):
     #df_filt_2019 = df_2019[['Código actividad económica','Nombre actividad económica']]
     #print(df_fil)
     #print(df_filt_2019)
-    print('TAMAÑO:  ',req_3[1])
-    print('TIEMPO:  ',req_3[2])
+    print('Tiempo:  ',req_3[1])
+    print('Memoria:  ',req_3[2])
 
 
 def print_req_4(control):
@@ -475,7 +477,8 @@ if __name__ == "__main__":
 
             elif int(inputs) == 4:
                 anio = input('Ingrese un año: ')
-                print_req_3(control,anio)
+                memory = menu_espacio()
+                print_req_3(control,anio,memory)
 
             elif int(inputs) == 5:
                 print_req_4(control)

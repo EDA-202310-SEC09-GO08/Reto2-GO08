@@ -116,19 +116,30 @@ def req_2(control,anio, sector):
     return res
 
 
-def req_3(control,anio):
+def req_3(control,anio,memory):
     """
     Retorna el resultado del requerimiento 3
     """
     # TODO: Modificar el requerimiento 3
+    delta_m = None
+    if memory is True:
+        tracemalloc.start()
+        start_memory = get_memory() 
     start_time = get_time()
     req_3 = model.req_3(control["model"],anio)
+    if memory is True:
+        stop_memory = get_memory()
+        tracemalloc.stop()
+        # calcula la diferencia de memoria
+        delta_m = delta_memory(stop_memory, start_memory)
+        # respuesta con los datos de tiempo y memoria
+    
     end_time = get_time()
     delta_t = delta_time(start_time,end_time)
    
-    tamanio = 3
+    
 
-    return req_3, tamanio, delta_t
+    return req_3,delta_t, delta_m
 
 
 def req_4(control):
@@ -147,13 +158,31 @@ def req_5(control, anios):
     respuesta = model.req_5(control,anios)
     return respuesta 
 
-def req_6(control):
+def req_6(control,anio,memory):
     """
     Retorna el resultado del requerimiento 6
     """
-    # TODO: Modificar el requerimiento 6
-    pass
+    
+     
+    delta_m = None
+    if memory is True:
+        tracemalloc.start()
+        start_memory = get_memory() 
+    start_time = get_time()
+    req_3 = model.req_3(control["model"],anio)
+    if memory is True:
+        stop_memory = get_memory()
+        tracemalloc.stop()
+        # calcula la diferencia de memoria
+        delta_m = delta_memory(stop_memory, start_memory)
+        # respuesta con los datos de tiempo y memoria
+    
+    end_time = get_time()
+    delta_t = delta_time(start_time,end_time)
+   
+    
 
+    return control,delta_t, delta_m
 
 def req_7(control, anios, codigo, num_actividades):
     """
