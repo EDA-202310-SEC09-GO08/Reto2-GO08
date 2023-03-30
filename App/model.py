@@ -578,11 +578,8 @@ def req_5(data_structs, anio):
     heads = ["Código actividad económica", "Nombre actividad económica", "Código sector económico","Nombre sector económico",
                  "Código subsector económico", 'Nombre subsector económico',"Descuentos tributarios", "Total ingresos netos", "Total costos y gastos",
                  "Total saldo a pagar", "Total saldo a favor"]
-    
     final = filtrar_lista_dics_por(para_organizar, heads)
     #asignarle diccionario a cada uno por lo que quiero que muestre 
-    
-
     return respuesta, final, sector_mayor
 
 
