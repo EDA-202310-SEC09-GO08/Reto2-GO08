@@ -546,7 +546,7 @@ def print_req_7(control):
     numero_acti = input("Ingrese cuantas actividades desea investigar ")
     respuesta = controller.req_7(control, anios,codigo, numero_acti)
     tamanio = len(respuesta)
-    if tamanio < int(numero_acti):
+    if tamanio <= int(numero_acti):
         print ("There are only " + str(tamanio)+ " economic activities in subsector " + str(codigo) + " and in the year " + str(anios) )
         print(tabulate(respuesta, headers="keys", tablefmt= "grid", maxcolwidths=15, maxheadercolwidths=15  ))
     else:
