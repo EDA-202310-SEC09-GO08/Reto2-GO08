@@ -589,7 +589,29 @@ def print_req_8(control):
         Función que imprime la solución del Requerimiento 8 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 8
-    pass
+    anio = input("Ingrese el año en el que desea buscar la informacion")
+    top_n = int(input("Ingrese el numero de las mayores actividades que desea ver"))
+    resultado = controller.req_8(control, int(anio))
+    subsect = resultado[0]
+    print("Find the top " + str(top_n) + "economic activies of each sub-sector with the highest total taxes payable in " + anio)
+    print(tabulate(subsect , headers= 'keys' , tablefmt= 'grid',  maxcolwidths= 15, maxheadercolwidths=15 ))
+    acti = resultado[1]
+    tam = len(acti)
+    for sector in resultado[0]:
+        acti_sector = controller.aux_req8(sector)
+        top_i = 0
+        tam = len(acti_sector)
+        mayores = []
+        sub = 0
+        while top_i < top_n:
+            mayores.append(acti_sector[tam-1-top_i])
+            top_i += 1
+        print("Top " + str(top_n) + "activies in subsector" + )
+        print(tabulate(mayores , headers= 'keys' , tablefmt= "grid" , maxcolwidths=15 , maxheadercolwidths=15))
+    print("Tamaño: " + resultado[3])
+    print("Tiempo: " + resultado[2])
+
+    
 
 
 # Se crea el controlador asociado a la vista

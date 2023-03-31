@@ -258,12 +258,30 @@ def req_7(control, anios, codigo, num_actividades):
     return final
 
 
-def req_8(control):
+def req_8(control , anio):
     """
     Retorna el resultado del requerimiento 8
     """
     # TODO: Modificar el requerimiento 8
-    pass
+    tiempo_i = get_time()
+    memo_i = get_memory()
+    columnas1 = ["Código sector económico", "Nombre sector económico", "Código subsector económico", "Nombre subsector económico",
+                 "Total impuestos a cargo"
+                 "Total ingresos nectos" , "Total costos y gastos" , "Total saldo por pagar", "Total saldo a favor"]
+    columnas2 = ["Código actividad econnómica" , "Nombre actividad económica",
+                 "Total impuestos a cargo","Total costos y gastos nómina", "Total ingresos netos" , 
+                 "Total costos y gastos" , "Total saldo por pagar" , "Total saldo a favor"] 
+    resultado = model.req_8(control, anio)
+    resp_sec = model.filtrar_dic_con_por_llaves(resultado , columnas1)
+    resp_act = model.filtrar_dic_con_por_llaves(resultado, columnas2)
+    tiempo_f = get_time()
+    delta_t = delta_time(tiempo_i , tiempo_f)
+    memo_f = get_memory()
+    tamanio = delta_memory(memo_f, memo_i)
+    return resp_sec ,resp_act ,delta_t , tamanio
+
+def aux_req8(sector):
+    
 
 
 # Funciones para medir tiempos de ejecucion
