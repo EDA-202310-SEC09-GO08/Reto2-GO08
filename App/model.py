@@ -815,7 +815,7 @@ def req_8(data_structs , anio):
     dico_anio = devolver_value(dico, anio)
     lista_cod = lt.newList()
     #for codigo in dico_anio:
-    return dico
+    pass
 
 def aux_req8(sector):
     dico = organizar_sector(sector , "Código subsector económico")
