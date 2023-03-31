@@ -524,7 +524,8 @@ def req_4(data_structs, anio):
             sub_b = devolver_value(dico_anio, llave)
         numero += 1
     mayor = encontrar_mayor_criterio(sub_b , "Total costos y gastos nómina")
-    return mayor
+    sector_mayor = lt.getElement(llaves,mayor[1])
+    return sector_mayor
     
 
 
@@ -813,10 +814,12 @@ def req_8(data_structs , anio):
     dico = organizar_sector(data_structs, "Código sector económico")
     dico_anio = devolver_value(dico, anio)
     lista_cod = lt.newList()
-    for codigo in dico_anio:
-     
-    pass
+    #for codigo in dico_anio:
+    return dico
 
+def aux_req8(sector):
+    dico = organizar_sector(sector , "Código subsector económico")
+    
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
