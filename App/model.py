@@ -519,7 +519,7 @@ def req_4(data_structs, anio):
     llaves = mp.keySet(dico_anio)
     numero = 0
     for numero in range(lt.size(llaves)):
-        llave = llaves[i]
+        llave = llaves[numero]
         if llave == "Código subsector económico":
             sub_b = devolver_value(dico_anio, llave)
         numero += 1
@@ -814,7 +814,7 @@ def req_8(data_structs , anio):
     dico_anio = devolver_value(dico, anio)
     lista_cod = lt.newList()
     for codigo in dico_anio:
-        r
+        
     pass
 
 
