@@ -61,6 +61,20 @@ def new_data_structs(tipo,factor):
 
 
 # Funciones para agregar informacion al modelo
+def ordenar_map_anios_para_view(data_structs):
+    mapa=data_structs['Años']
+    llaves = mp.keySet(mapa)
+
+    llaves = lt.iterator(llaves)
+    for anio in llaves:
+        array = devolver_value(mapa,anio)['Lista']
+        array = quk.sort(array,sort_cod_activ)
+    return data_structs
+
+def sort_cod_activ(dato1,dato_2):
+        cod_1 = dato1['Código actividad económica'].split()[0].split('/')[0]
+        cod_2 = dato_2['Código actividad económica'].split()[0].split('/')[0]
+        return(float(cod_1)<float(cod_2))
 
 def add_data(data_structs, data):
     """
@@ -88,6 +102,7 @@ def add_impuesto_anio(data_structs, impuesto):
     
     lt.addLast(year['Lista'],impuesto)
 
+
 def newYear(year):
     """
     Esta funcion crea la estructura de libros asociados
@@ -97,6 +112,56 @@ def newYear(year):
     entry['Año'] = year
     entry['Lista'] = lt.newList('ARRAY_LIST', compareYears)
     return entry
+
+#### Map de item dado por parámetro que reemplaza diccionarios (req 6)
+
+
+def crear_mapa_de_columna_a_partir_de_ARRAy(array, columna):
+
+ 
+    mapa = mp.newMap(40, maptype='CHAINING' , loadfactor=0.5)
+    
+    ### Iteración para añadir
+    i = 1
+    tamanio_array = lt.size(array)
+    while i<=tamanio_array:
+
+        data = lt.getElement(array,i)
+
+        add_data_y_o_casilla_al_mapa(mapa,data,columna)
+
+        i+=1
+    
+    return mapa
+
+    
+
+    
+def add_data_y_o_casilla_al_mapa(mapa, data,parametro):
+ 
+    llave_casilla = data[parametro]
+    
+
+    exist_casilla = mp.contains(mapa,llave_casilla)
+    if exist_casilla:
+        entry = mp.get(mapa,llave_casilla)
+        array_asociado = me.getValue(entry)
+    else:
+        array_asociado = new_casilla()
+        mp.put(mapa,llave_casilla,array_asociado)
+    
+    lt.addLast(array_asociado,data)
+
+
+def new_casilla():
+    """
+    Esta funcion crea la estructura de libros asociados
+    a un año.
+    """
+   
+    entry = lt.newList('ARRAY_LIST', compareYears)
+    return entry
+
 
 def organizar_sector(data_structs,subdivision):
     llaves = mp.keySet(data_structs["model"]["Años"])
@@ -297,14 +362,15 @@ def req_2(data_structs, anio, codigo):
 
 
 def crear_lista_subsectores_por_anio(lista_actividades):
-   
-    dic_subsecs ={}
-    ## primero crea diccionario
+    mapa_subsects= mp.newMap()
+    ## primero crea mapa de subsectores vacío
     lista_actividades = lt.iterator(lista_actividades)
     
     for impuesto in lista_actividades:
         llave_subsector_dado =impuesto['Código subsector económico']
-        if llave_subsector_dado not in dic_subsecs.keys():
+
+        existe = mp.contains(mapa_subsects,llave_subsector_dado)
+        if existe ==False:
             
             dict_subsector_dado = {}
             dict_subsector_dado['Año']=impuesto['Año']
@@ -319,10 +385,10 @@ def crear_lista_subsectores_por_anio(lista_actividades):
             dict_subsector_dado['Total saldo a favor']=float(impuesto['Total saldo a favor'])
             dict_subsector_dado['Primeras y últimas 3 actividades en contribuir'] = 0
 
-            dic_subsecs[llave_subsector_dado]=dict_subsector_dado
+            mp.put(mapa_subsects,llave_subsector_dado,dict_subsector_dado)
         else:
             ## Va contando los totales
-            dict_subsector_dado =dic_subsecs[llave_subsector_dado]
+            dict_subsector_dado =devolver_value(mapa_subsects,llave_subsector_dado)
             dict_subsector_dado['Total retenciones']+=float(impuesto['Total retenciones'])
             dict_subsector_dado['Total ingresos netos']+=float(impuesto['Total ingresos netos'])
             dict_subsector_dado['Total costos y gastos']+=float(impuesto['Total costos y gastos'])
@@ -331,8 +397,12 @@ def crear_lista_subsectores_por_anio(lista_actividades):
     
      ### Lista Tad       
     lista_subsects=lt.newList(datastructure="ARRAY_LIST")
-    for llave in dic_subsecs.keys():
-        lt.addLast(lista_subsects,dic_subsecs[llave])
+
+    lista_llaves = lt.iterator(mp.keySet(mapa_subsects))
+
+    ### iteración para añadir subsector a lista
+    for llave in lista_llaves:
+        lt.addLast(lista_subsects,devolver_value(mapa_subsects,llave))
 
     return lista_subsects
 
@@ -527,21 +597,171 @@ def req_5(data_structs, anio):
     heads = ["Código actividad económica", "Nombre actividad económica", "Código sector económico","Nombre sector económico",
                  "Código subsector económico", 'Nombre subsector económico',"Descuentos tributarios", "Total ingresos netos", "Total costos y gastos",
                  "Total saldo a pagar", "Total saldo a favor"]
-    
     final = filtrar_lista_dics_por(para_organizar, heads)
     #asignarle diccionario a cada uno por lo que quiero que muestre 
-    
-
     return respuesta, final, sector_mayor
 
 
-def req_6(data_structs):
+##### REQ 6
+
+def crear_lista_sectores_totalizados_por_anio(lista_subsectores):
+   
+    mapa_secs = mp.newMap()
+    ## primero crea mapa de subsectores vacío
+    lista_subsectores = lt.iterator(lista_subsectores)
+    
+    for subsector in lista_subsectores:
+        llave_sector_dado =subsector['Código sector económico']
+
+        existe = mp.contains(mapa_secs,llave_sector_dado)
+        if existe ==False:
+            
+            dict_sector_dado = {}
+            dict_sector_dado['Año']=subsector['Año']
+            dict_sector_dado['Código sector económico']=subsector['Código sector económico']
+            dict_sector_dado['Nombre sector económico']=subsector['Nombre sector económico']
+            dict_sector_dado['Total retenciones']=float(subsector['Total retenciones'])
+            dict_sector_dado['Total ingresos netos']=float(subsector['Total ingresos netos'])
+            dict_sector_dado['Total costos y gastos']=float(subsector['Total costos y gastos'])
+            dict_sector_dado['Total saldo a pagar']=float(subsector['Total saldo a pagar'])
+            dict_sector_dado['Total saldo a favor']=float(subsector['Total saldo a favor'])
+            dict_sector_dado['Primeras y últimas 3 actividades en contribuir'] = 0
+
+            mp.put(mapa_secs,llave_sector_dado,dict_sector_dado)
+        else:
+            ## Va contando los totales
+            dict_sector_dado =devolver_value(mapa_secs,llave_sector_dado)
+            dict_sector_dado['Total retenciones']+=float(subsector['Total retenciones'])
+            dict_sector_dado['Total ingresos netos']+=float(subsector['Total ingresos netos'])
+            dict_sector_dado['Total costos y gastos']+=float(subsector['Total costos y gastos'])
+            dict_sector_dado['Total saldo a pagar']+=float(subsector['Total saldo a pagar'])
+            dict_sector_dado['Total saldo a favor']+=float(subsector['Total saldo a favor'])
+    
+     ### Lista Tad       
+    lista_sects=lt.newList(datastructure="ARRAY_LIST")
+
+    lista_llaves = lt.iterator(mp.keySet(mapa_secs))
+
+    ### iteración para añadir subsector a lista
+    for llave in lista_llaves:
+        lt.addLast(lista_sects,devolver_value(mapa_secs,llave))
+
+    return lista_sects
+
+def encontrar_mayor_con_condicion(lista, criterio_mayor,criterio_condicion=None, condicion=True):
+    
+    i =1
+    tamanio = lt.size(lista)
+    mayor = 0
+    respuesta ={}
+    while i <= tamanio:
+        dato = lt.getElement(lista,i)
+
+        if condicion ==True or dato[criterio_condicion] ==  condicion:
+        
+             if float(dato[criterio_mayor])>float(mayor):
+                mayor = dato[criterio_mayor]
+                respuesta = dato
+        i+=1
+    return respuesta      
+
+
+def encontrar_menor_con_condicion(lista, criterio_menor,criterio_condicion=None, condicion=True):
+    
+    i =1
+    tamanio = lt.size(lista)
+    menor = 999999999999999999
+    respuesta ={}
+    while i <= tamanio:
+        dato = lt.getElement(lista,i)
+
+        if condicion ==True or dato[criterio_condicion] ==  condicion:
+        
+             if float(dato[criterio_menor])<float(menor):
+                menor = dato[criterio_menor]
+                respuesta = dato
+        i+=1
+    return respuesta      
+
+
+def req_6(data_structs, anio):
     """
     Función que soluciona el requerimiento 6
     """
-    # TODO: Realizar el requerimiento 6
-    pass
+    anio = int(anio)
+    map_anios = data_structs['Años']
+    array_del_anio = devolver_value(map_anios,anio)['Lista']
+    
 
+
+    #### Crear map de actividades por subsector (llave subsector, valor array de actividades)
+
+
+    ### crea lista totalizada de subsectores
+
+    lista_subsectores = crear_lista_subsectores_por_anio(array_del_anio)
+
+
+    ### Crea lista de sectores más general
+
+    lista_sectores = crear_lista_sectores_totalizados_por_anio(lista_subsectores)
+
+    
+    #### Encontrar mayor sector
+
+    mayor_sector = encontrar_mayor_con_condicion(lista_sectores,'Total ingresos netos')
+
+        
+    codigo_sector_mayor = mayor_sector['Código sector económico']
+
+        ###Proceso con mayor
+
+    mayor_subsector_para_sector_dado = encontrar_mayor_con_condicion(lista_subsectores,'Total ingresos netos','Código sector económico',codigo_sector_mayor)
+
+    codigo_mayor_subsector = mayor_subsector_para_sector_dado['Código subsector económico']
+
+    mayor_actividad_mayor_subsector = encontrar_mayor_con_condicion(array_del_anio,'Total ingresos netos','Código subsector económico',codigo_mayor_subsector)
+
+    menor_actividad_mayor_subsector = encontrar_menor_con_condicion(array_del_anio,'Total ingresos netos','Código subsector económico',codigo_mayor_subsector)
+
+        ## añadir mayor y menor actividad a mayor subsector
+
+    mayor_subsector_para_sector_dado['Actividad que más contribuyó']= mayor_actividad_mayor_subsector
+
+    mayor_subsector_para_sector_dado['Actividad que menos contribuyó']=menor_actividad_mayor_subsector
+
+        ### añadir mayor subsector a sector dado
+
+    mayor_sector['Subsector que más contribuyó'] = mayor_subsector_para_sector_dado
+
+
+
+
+    ##### Proceso con menor
+
+    menor_subsector_para_sector_dado = encontrar_menor_con_condicion(lista_subsectores, 'Total ingresos netos','Código sector económico', codigo_sector_mayor)
+        
+    codigo_menor_subsector = menor_subsector_para_sector_dado['Código subsector económico']
+
+      
+
+    mayor_actividad_menor_subsector = encontrar_mayor_con_condicion(array_del_anio,'Total ingresos netos','Código subsector económico',codigo_menor_subsector)
+
+    menor_actividad_menor_subsector = encontrar_menor_con_condicion(array_del_anio,'Total ingresos netos','Código subsector económico',codigo_menor_subsector)
+
+        ## Añadir mayor y menor actividad a menor subsector
+
+    menor_subsector_para_sector_dado['Actividad que más contribuyó']=mayor_actividad_menor_subsector
+
+    menor_subsector_para_sector_dado['Actividad que menos contribuyó']= menor_actividad_menor_subsector
+
+
+
+        ### Añadir menor subsector a sector dado
+    mayor_sector['subsector que menos aportó'] = menor_subsector_para_sector_dado
+
+
+    return mayor_sector
 
 def req_7(data_structs, anio, codigo, num_actividades):
     """

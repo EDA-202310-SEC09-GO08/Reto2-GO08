@@ -64,6 +64,7 @@ def load_data(control, filename,memory):
     for line in input_file:
         model.add_data(catalog, line)
 
+    model.ordenar_map_anios_para_view(control['model'])
     stop_time =get_time()
 
     delta = delta_time(start_time, stop_time)
@@ -121,23 +122,48 @@ def req_2(control,anio, sector):
     Retorna el resultado del requerimiento 2
     """
     # TODO: Modificar el requerimiento 2
+    tracemalloc.start()  
+    start_memory = get_memory()  
+
+    start_time = get_time()
     res = model.req_2(control, anio, sector)
+    stop_time =get_time()
+
+    delta = delta_time(start_time, stop_time)
+    stop_memory = get_memory()
+    tracemalloc.stop()
+       
+    delta_m = delta_memory(stop_memory, start_memory)
+
+    print("el tiempo " + str(delta))
+    print("con memoria " + str(delta_m))
     return res
 
 
-def req_3(control,anio):
+def req_3(control,anio,memory):
     """
     Retorna el resultado del requerimiento 3
     """
     # TODO: Modificar el requerimiento 3
+    delta_m = None
+    if memory is True:
+        tracemalloc.start()
+        start_memory = get_memory() 
     start_time = get_time()
     req_3 = model.req_3(control["model"],anio)
+    if memory is True:
+        stop_memory = get_memory()
+        tracemalloc.stop()
+        # calcula la diferencia de memoria
+        delta_m = delta_memory(stop_memory, start_memory)
+        # respuesta con los datos de tiempo y memoria
+    
     end_time = get_time()
     delta_t = delta_time(start_time,end_time)
    
-    tamanio = 3
+    
 
-    return req_3, tamanio, delta_t
+    return req_3,delta_t, delta_m
 
 
 def req_4(control , anio):
@@ -166,23 +192,69 @@ def req_5(control, anios):
     Retorna el resultado del requerimiento 5
     """
     # TODO: Modificar el requerimiento 5
+    tracemalloc.start()  
+    start_memory = get_memory()  
+    start_time = get_time()
     respuesta = model.req_5(control,anios)
+    stop_time =get_time()
+
+    delta = delta_time(start_time, stop_time)
+    stop_memory = get_memory()
+    tracemalloc.stop()
+       
+    delta_m = delta_memory(stop_memory, start_memory)
+    
+
+    print("el tiempo " + str(delta))
+    print("con memoria " + str(delta_m))
     return respuesta 
 
-def req_6(control):
+def req_6(control,anio,memory):
     """
     Retorna el resultado del requerimiento 6
     """
-    # TODO: Modificar el requerimiento 6
-    pass
+    
+     
+    delta_m = None
+    if memory is True:
+        tracemalloc.start()
+        start_memory = get_memory() 
+    start_time = get_time()
+    req_6 = model.req_6(control["model"],anio)
+    if memory is True:
+        stop_memory = get_memory()
+        tracemalloc.stop()
+        # calcula la diferencia de memoria
+        delta_m = delta_memory(stop_memory, start_memory)
+        # respuesta con los datos de tiempo y memoria
+    
+    end_time = get_time()
+    delta_t = delta_time(start_time,end_time)
+   
+    
 
+    return req_6,delta_t, delta_m
 
 def req_7(control, anios, codigo, num_actividades):
     """
     Retorna el resultado del requerimiento 7
     """
     # TODO: Modificar el requerimiento 7
+    tracemalloc.start()  
+    start_memory = get_memory()  
+    start_time = get_time()
+
     final = model.req_7(control, anios, codigo, num_actividades)
+    stop_time =get_time()
+
+    delta = delta_time(start_time, stop_time)
+    stop_memory = get_memory()
+    tracemalloc.stop()
+       
+    delta_m = delta_memory(stop_memory, start_memory)
+
+    print("el tiempo " + str(delta))
+    print("con memoria " + str(delta_m))
     return final
 
 

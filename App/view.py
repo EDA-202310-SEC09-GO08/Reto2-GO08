@@ -109,6 +109,48 @@ def new_controller(tipo,factor):
 
     return control
 
+def devolver_value(map, key):
+    llave_valor = mp.get(map, key)
+    valor = me.getValue(llave_valor)
+    
+    return valor 
+def print_3_primeros_3_ultimos(control):
+    
+    mapa = control['model']['Años']
+
+    ### Crear lista para cada año a imprimir
+    tamanio_mapa =lt.size(mp.keySet(mapa))
+    anio = 2012
+
+    while anio <2012+tamanio_mapa:
+        array_anio = devolver_value(mapa,anio)['Lista']
+        tamanio_array = lt.size(array_anio)
+        lista_imprimir_anio = []
+
+        if tamanio_array>=6:
+            lista_imprimir_anio.append(lt.getElement(array_anio,1))
+            lista_imprimir_anio.append(lt.getElement(array_anio,2))
+            lista_imprimir_anio.append(lt.getElement(array_anio,3))
+            lista_imprimir_anio.append(lt.getElement(array_anio,tamanio_array-2))
+            lista_imprimir_anio.append(lt.getElement(array_anio,tamanio_array-1))
+            lista_imprimir_anio.append(lt.getElement(array_anio,tamanio_array))
+
+        else:
+            i =1
+            while i<=tamanio_array:
+                lista_imprimir_anio.append(lt.getElement(array_anio,i))
+                i+=1
+
+        lista_filtrada = filtrar_lista_dics_por_columnas(lista_imprimir_anio,['Año', "Código actividad económica","Nombre actividad económica","Código sector económico","Nombre sector económico",
+    "Código subsector económico","Nombre subsector económico","Total ingresos netos", "Total costos y gastos", "Total saldo a pagar", "Total saldo a favor"])
+        
+        tabulate_respuesta = tabulate(lista_filtrada, headers='keys', maxcolwidths =[10]*11, maxheadercolwidths=[10]*11)
+        print('Las primeras y últimas actividades económicas para ',anio,' son: ')
+        print(tabulate_respuesta)
+        anio += 1
+
+
+
 
 def print_menu():
     print("Bienvenido")
@@ -308,14 +350,16 @@ def print_req_2(control):
     print(tabulate([respuesta], headers="keys", tablefmt= "grid", maxcolwidths=15, maxheadercolwidths=15  ))
 
 
-def print_req_3(control,anio):
+def print_req_3(control,anio,memory):
     """
         Función que imprime la solución del Requerimiento 3 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 3
-    req_3 = controller.req_3(control,anio)
+    req_3 = controller.req_3(control,anio,memory)
 
     respuesta = [req_3[0]]
+
+    
 
     
 
@@ -354,8 +398,8 @@ def print_req_3(control,anio):
     #df_filt_2019 = df_2019[['Código actividad económica','Nombre actividad económica']]
     #print(df_fil)
     #print(df_filt_2019)
-    print('TAMAÑO:  ',req_3[1])
-    print('TIEMPO:  ',req_3[2])
+    print('Tiempo:  ',req_3[1])
+    print('Memoria:  ',req_3[2])
 
 
 def print_req_4(control):
@@ -418,12 +462,105 @@ def print_req_5(control):
     
 
 
-def print_req_6(control):
-    """
-        Función que imprime la solución del Requerimiento 6 en consola
-    """
-    # TODO: Imprimir el resultado del requerimiento 6
-    pass
+def print_req_6(control,anio,memory):
+    req_6 = controller.req_6(control,anio,memory)
+    respuesta = req_6[0]
+    req_6_lista = [req_6[0]]
+    req_6_tiempo = req_6[1]
+    req_6_memory = req_6[2]
+
+    respuesta_filtrada =filtrar_lista_dics_por_columnas( req_6_lista,['Código sector económico',
+                                              'Nombre sector económico','Total ingresos netos',
+                                          'Total costos y gastos','Total saldo a pagar','Total saldo a favor'])
+
+
+    tabulate_respuesta = tabulate(respuesta_filtrada, headers='keys', maxcolwidths =[15]*6, maxheadercolwidths=[15]*6)
+    print(tabulate_respuesta)
+
+   
+
+    subsector_mayor = respuesta['Subsector que más contribuyó']
+        #print(subsector_mayor)
+    subsector_mayor_filt = filtrar_dic_con_por_llaves(subsector_mayor,['Código subsector económico',
+                                              'Nombre subsector económico','Total ingresos netos',
+                                          'Total costos y gastos','Total saldo a pagar','Total saldo a favor'])
+        
+        #print(subsector_mayor_filt)
+        
+    subsect_mayor_tab = tabulate([subsector_mayor_filt], headers='keys', maxcolwidths =[15]*6, maxheadercolwidths=[15]*6)
+    print(subsect_mayor_tab)
+        
+    print('Para el dicho subsector que más aporto, las actividades que más y menos aportaron respectivamente son:')
+
+    actividad_mas_subsector_mayor = subsector_mayor['Actividad que más contribuyó']
+    actividad_menos_subsector_mayor = subsector_mayor['Actividad que menos contribuyó']
+
+    actividad_mas_subsector_mayor_filt = filtrar_dic_con_por_llaves(actividad_mas_subsector_mayor,['Código actividad económica',
+                                              'Nombre actividad económica','Total ingresos netos',
+                                          'Total costos y gastos','Total saldo a pagar','Total saldo a favor'])
+        
+        #print(actividad_mas_subsector_mayor_filt)
+        
+    actividad_menos_subsector_mayor_filt = filtrar_dic_con_por_llaves(actividad_menos_subsector_mayor,['Código actividad económica',
+                                              'Nombre actividad económica','Total ingresos netos',
+                                          'Total costos y gastos','Total saldo a pagar','Total saldo a favor'])
+        
+
+    tab_mayor_mayor = tabulate([actividad_mas_subsector_mayor_filt], headers='keys', maxcolwidths =[15]*6, maxheadercolwidths=[15]*6)
+    tab_mayor_menor = tabulate([actividad_menos_subsector_mayor_filt], headers='keys', maxcolwidths =[15]*6, maxheadercolwidths=[15]*6)
+    print(tab_mayor_mayor)
+    print(tab_mayor_menor)
+
+
+
+        ### Ahora con menor
+
+    subsector_menor = respuesta['subsector que menos aportó']
+        #print(subsector_mayor)
+    subsector_menor_filt = filtrar_dic_con_por_llaves(subsector_menor,['Código subsector económico',
+                                              'Nombre subsector económico','Total ingresos netos',
+                                          'Total costos y gastos','Total saldo a pagar','Total saldo a favor'])
+        
+        #print(subsector_mayor_filt)
+        
+    subsect_menor_tab = tabulate([subsector_menor_filt], headers='keys', maxcolwidths =[15]*6, maxheadercolwidths=[15]*6)
+    print(subsect_menor_tab)
+        
+    print('Para el dicho subsector que MENOS aporto, las actividades que MÁS y MENOS aportaron respectivamente son:')
+
+    actividad_mas_subsector_menor = subsector_menor['Actividad que más contribuyó']
+    actividad_menos_subsector_menor = subsector_menor['Actividad que menos contribuyó']
+
+    actividad_mas_subsector_menor_filt = filtrar_dic_con_por_llaves(actividad_mas_subsector_menor,['Código actividad económica',
+                                              'Nombre actividad económica','Total ingresos netos',
+                                          'Total costos y gastos','Total saldo a pagar','Total saldo a favor'])
+        
+        #print(actividad_mas_subsector_mayor_filt)
+        
+    actividad_menos_subsector_menor_filt = filtrar_dic_con_por_llaves(actividad_menos_subsector_menor,['Código actividad económica',
+                                              'Nombre actividad económica','Total ingresos netos',
+                                          'Total costos y gastos','Total saldo a pagar','Total saldo a favor'])
+        
+
+    tab_menor_mayor = tabulate([actividad_mas_subsector_menor_filt], headers='keys', maxcolwidths =[15]*6, maxheadercolwidths=[15]*6)
+    tab_menor_menor = tabulate([actividad_menos_subsector_menor_filt], headers='keys', maxcolwidths =[15]*6, maxheadercolwidths=[15]*6)
+    print(tab_menor_mayor)
+    print(tab_menor_menor)
+
+
+
+    
+      
+
+    #df_sectores = pd.DataFrame(req_6_lista)
+    #df_sectores_imprimir = df_sectores[['Nombre sector económico','Total ingresos netos']]
+
+    
+    #print(df_sectores_imprimir)
+
+    print('TAMAÑO: ',req_6_tiempo)
+    print('TIEMPO: ', req_6_memory)
+
 
 
 def print_req_7(control):
@@ -436,7 +573,7 @@ def print_req_7(control):
     numero_acti = input("Ingrese cuantas actividades desea investigar ")
     respuesta = controller.req_7(control, anios,codigo, numero_acti)
     tamanio = len(respuesta)
-    if tamanio < int(numero_acti):
+    if tamanio <= int(numero_acti):
         print ("There are only " + str(tamanio)+ " economic activities in subsector " + str(codigo) + " and in the year " + str(anios) )
         print(tabulate(respuesta, headers="keys", tablefmt= "grid", maxcolwidths=15, maxheadercolwidths=15  ))
     else:
@@ -481,6 +618,7 @@ if __name__ == "__main__":
 
                 control = new_controller(tipo,factor)
                 tupla = load_data(control,filename,memory)
+                print_3_primeros_3_ultimos(control)
                 
                 print('Tamaño: ')
                 print(lt.size(control['model']['Lista actividades general']))
@@ -488,12 +626,12 @@ if __name__ == "__main__":
                 print(tupla[1])
                 print('memoria: ')
                 print(tupla[2])
-                dat =mp.get(control['model']['Años'],2015)
-                llaves = mp.keySet(control['model']['Años'])
+                #dat =mp.get(control['model']['Años'],2015)
+                #llaves = mp.keySet(control['model']['Años'])
                 
-                
-                print(llaves)
-                print(dat)
+
+                #print(llaves)
+               # print(dat)
             elif int(inputs) == 2:
                 print_req_1(control)
 
@@ -502,7 +640,8 @@ if __name__ == "__main__":
 
             elif int(inputs) == 4:
                 anio = input('Ingrese un año: ')
-                print_req_3(control,anio)
+                memory = menu_espacio()
+                print_req_3(control,anio,memory)
 
             elif int(inputs) == 5:
                 print_req_4(control)
@@ -511,7 +650,9 @@ if __name__ == "__main__":
                 print_req_5(control)
 
             elif int(inputs) == 7:
-                print_req_6(control)
+                anio = input('Ingrese un año: ')
+                memory = menu_espacio()               
+                print_req_6(control,anio,memory)
 
             elif int(inputs) == 8:
                 print_req_7(control)
