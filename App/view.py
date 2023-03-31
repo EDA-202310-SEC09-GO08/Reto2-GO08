@@ -331,6 +331,7 @@ def print_req_1(control):
     sector = input("Indique el sector que desea buscar: ")
     resultado = controller.req_1(control, int(anio) , sector)
     respuesta = resultado[0]
+    print("Find the activity with the highest balace due 'Saldo por pagar' for the year" + anio + "and economic sector code" + str(anio))
     print(tabulate([respuesta] , headers= "keys" , tablefmt= "grid", maxcolwidths=15 , maxheadercolwidths= 15))
     print("Tamaño :" + str(resultado[2]))
     print("Tiempo :" + str(resultado[1]))
@@ -427,6 +428,8 @@ def print_req_4(control):
     else:
         print("There are only " + str(len(acti) + " activities that contributed in " + str(anio)))
         print(tabulate(acti , headers= 'keys' , tablefmt= 'grid', maxcolwidths=15 , maxheadercolwidths= 15))
+    print("Tamaño: " + resultado[3])
+    print("Tiempo: " + resultado[2])
     
 
 

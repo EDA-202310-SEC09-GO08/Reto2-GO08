@@ -814,7 +814,7 @@ def req_8(data_structs , anio):
     dico_anio = devolver_value(dico, anio)
     lista_cod = lt.newList()
     for codigo in dico_anio:
-        
+     
     pass
 
 
