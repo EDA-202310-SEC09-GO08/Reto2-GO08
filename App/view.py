@@ -285,7 +285,14 @@ def print_req_1(control):
         Función que imprime la solución del Requerimiento 1 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 1
-    pass
+    anio = input("Indique el año en que desea buscar la informacion: ")
+    sector = input("Indique el sector que desea buscar: ")
+    resultado = controller.req_1(control, int(anio) , sector)
+    respuesta = resultado[0]
+    print(tabulate([respuesta] , headers= "keys" , tablefmt= "grid", maxcolwidths=15 , maxheadercolwidths= 15))
+    print("Tamaño :" + str(resultado[2]))
+    print("Tiempo :" + str(resultado[1]))
+    
 
 
 def print_req_2(control):
@@ -356,7 +363,27 @@ def print_req_4(control):
         Función que imprime la solución del Requerimiento 4 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 4
-    pass
+    anio = input("Ingrese el año en el que desea buscar la informacion")
+    resultado = controller.req_4(control, int(anio))
+    subsect = resultado[0]
+    print(tabulate(subsect , headers= 'keys' , tablefmt= 'grid',  maxcolwidths= 15, maxheadercolwidths=15 ))
+    acti = resultado[1]
+    menores = []
+    mayores = []
+    tam = len(acti)
+    if tam > 6:
+        i = 0
+        while i < 3:
+            menores.append(acti[i])
+            mayores.append(acti[tam - 1 - i])
+        print("Then three activities that contributed the least in " + anio)
+        print(tabulate(menores , headers= ' keys', tablefmt='grid' , maxcolwidths= 15, maxheadercolwidths= 15))
+        print("Then three activities that contributed the most in " + anio)
+        print(tabulate(mayores , headers= ' keys', tablefmt='grid' , maxcolwidths= 15, maxheadercolwidths= 15))
+    else:
+        print("There are only " + str(len(acti) + " activities that contributed in " + str(anio)))
+        print(tabulate(acti , headers= 'keys' , tablefmt= 'grid', maxcolwidths=15 , maxheadercolwidths= 15))
+    
 
 
 def print_req_5(control):

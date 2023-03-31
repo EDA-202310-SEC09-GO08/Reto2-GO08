@@ -99,12 +99,21 @@ def get_data(control, id):
     pass
 
 
-def req_1(control):
+def req_1(control, anio, sector):
     """
     Retorna el resultado del requerimiento 1
     """
     # TODO: Modificar el requerimiento 1
-    pass
+    tiempo_i = get_time()
+    columnas = ["Código actividad econñomica", "Nombre actividad económica", "Código subsector económico"
+                "Nombre subsector económico", " Total ingresos netos", "Total costos y gastos" , 
+                "Total saldo por pagar" , "Total saldo a favor"]
+    resultado = model.req_1(control, anio, sector)
+    respuesta = model.filtrar_dic_con_por_llaves(resultado , columnas)
+    tiempo_f = get_time()
+    delta_t = delta_time(tiempo_i, tiempo_f)
+    tamanio = 1
+    return respuesta , delta_t , tamanio 
 
 
 def req_2(control,anio, sector):
@@ -131,12 +140,25 @@ def req_3(control,anio):
     return req_3, tamanio, delta_t
 
 
-def req_4(control):
+def req_4(control , anio):
     """
     Retorna el resultado del requerimiento 4
     """
-    # TODO: Modificar el requerimiento 4
-    pass
+    tiempo_i = get_time()
+    memo_i = get_memory()
+    columnas1 = ["Código sector económico", "Nombre sector económico", "Código subsector económico", "Nombre subsector económico",
+                 "Total ingresos nectos" , "Total costos y gastos" , "Total saldo por pagar", "Total saldo a favor"]
+    columnas2 = ["Código actividad econnómica" , "Nombre actividad económica",
+                 "Total costos y gastos nómina", "Total ingresos netos" , 
+                 "Total costos y gastos" , "Total saldo por pagar" , "Total saldo a favor"] 
+    resultado = model.req_4(control, anio)
+    resp_sec = model.filtrar_dic_con_por_llaves(resultado , columnas1)
+    resp_act = model.filtrar_dic_con_por_llaves(resultado, columnas2)
+    tiempo_f = get_time()
+    delta_t = delta_time(tiempo_i , tiempo_f)
+    memo_f = get_memory()
+    tamanio = delta_memory(memo_f, memo_i)
+    return resp_sec ,resp_act ,delta_t , tamanio
 
 
 def req_5(control, anios):

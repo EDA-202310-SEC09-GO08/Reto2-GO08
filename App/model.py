@@ -251,12 +251,17 @@ def data_size(data_structs):
     pass
 
 
-def req_1(data_structs):
+def req_1(data_structs , anio : int, codigo : int):
     """
     Función que soluciona el requerimiento 1
     """
     # TODO: Realizar el requerimiento 1
-    pass
+    # retornar ACTIVIDAD ECONOMICA con mayor SALDO A PAGAR dado un AÑO y SECTOR ECONOMICO
+    dicco = organizar_sector(data_structs, "Código sector económico")
+    anio_b = devolver_value(dicco,anio)
+    sector_b = devolver_value(anio_b, codigo)
+    resultado = encontrar_mayor_criterio(sector_b, "Total saldo por pagar")
+    return resultado
 
 
 def req_2(data_structs, anio, codigo):
@@ -431,12 +436,26 @@ def req_3(data_structs,anio):
 def sort_crit_gen(dato_1,dato_2):
     return(float(dato_1)<float(dato_2))
 
-def req_4(data_structs):
+
+def req_4(data_structs, anio):
     """
     Función que soluciona el requerimiento 4
     """
+    
     # TODO: Realizar el requerimiento 4
-    pass
+    #SUBSECTOR ECONOMICO con mayores COSTOS Y GASTOS DE NOMINA dado un AÑO
+    dico = organizar_sector(data_structs, "Código subsector económico")
+    dico_anio = devolver_value(dico, anio)
+    llaves = mp.keySet(dico_anio)
+    numero = 0
+    for numero in range(lt.size(llaves)):
+        llave = llaves[i]
+        if llave == "Código subsector económico":
+            sub_b = devolver_value(dico_anio, llave)
+        numero += 1
+    mayor = encontrar_mayor_criterio(sub_b , "Total costos y gastos nómina")
+    return mayor
+    
 
 
 def req_5(data_structs, anio):
@@ -567,11 +586,15 @@ def req_7(data_structs, anio, codigo, num_actividades):
 
 
 
-def req_8(data_structs):
+def req_8(data_structs , anio):
     """
     Función que soluciona el requerimiento 8
     """
-    # TODO: Realizar el requerimiento 8
+    dico = organizar_sector(data_structs, "Código sector económico")
+    dico_anio = devolver_value(dico, anio)
+    lista_cod = lt.newList()
+    for codigo in dico_anio:
+        r
     pass
 
 
