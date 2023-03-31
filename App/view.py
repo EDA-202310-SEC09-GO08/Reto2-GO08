@@ -606,7 +606,7 @@ def print_req_8(control):
         while top_i < top_n:
             mayores.append(acti_sector[tam-1-top_i])
             top_i += 1
-        print("Top " + str(top_n) + "activies in subsector" + )
+        #print("Top " + str(top_n) + "activies in subsector" + )
         print(tabulate(mayores , headers= 'keys' , tablefmt= "grid" , maxcolwidths=15 , maxheadercolwidths=15))
     print("Tamaño: " + resultado[3])
     print("Tiempo: " + resultado[2])

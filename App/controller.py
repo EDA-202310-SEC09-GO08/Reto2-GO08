@@ -281,6 +281,7 @@ def req_8(control , anio):
     return resp_sec ,resp_act ,delta_t , tamanio
 
 def aux_req8(sector):
+    resultado = model.au
     
 
 
